@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>火星シミュレーション</title>
+    <link rel="stylesheet" href="flying.css">
+</head>
+
+<body class = "background">
+    <h1>火星に行きまーす</h1>
+
+    <h2>📅 日数: <span id="day">1</span> 日目</h2>
+
+    <div class="status-bar">
+        体力: <span id="health">100</span>
+        <div class="bar-container">
+            <div id="health-bar" class="bar red"></div>
+        </div>
+    </div>
+    <div class="status-bar">
+        空腹: <span id="hunger">100</span>
+        <div class="bar-container">
+            <div id="hunger-bar" class="bar orange"></div>
+        </div>
+    </div>
+    <div class="status-bar">
+        水分: <span id="thirst">100</span>
+        <div class="bar-container">
+            <div id="thirst-bar" class="bar blue"></div>
+        </div>
+    </div>
+    <div class="status-bar">
+        トレーニング: <span id="training">0</span>
+        <div class="bar-container">
+            <div id="training-bar" class="bar green"></div>
+        </div>
+    </div>
+    <div class="status-bar">
+        ストレス: <span id="stress">0</span>
+        <div class="bar-container">
+            <div id="stress-bar" class="bar purple"></div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <img src="images/food.png" alt="食事" onclick="eat()" title="食事で空腹・水分を回復">
+        <img src="images/training.png" alt="トレーニング" onclick="train()" title="体力・トレーニング上昇">
+    </div>
+
+    <button onclick="nextDay()">次の日へ</button>
+
+    <script src="flying.js"></script>
+</body>
+
+</html>

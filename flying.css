@@ -1,0 +1,39 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+.background{
+    background-image: url(image/spaceShip.png);
+    background-repeat: no-repeat;
+    /* 背景画像を繰り返し表示させない */
+    background-size: 100%;
+    /* 背景画像を全画面表示 */
+    background-position: center top;
+    transition: background-position 0.35s ease-in;
+}
+.bar-container {
+    width: 200px;
+    height: 20px;
+    background-color: #ddd;
+    margin: 5px auto;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+.red {background-color: red;}
+.orange {background-color: orange;}
+.blue {background-color: deepskyblue;}
+.green {background-color: seagreen;}
+.purple {background-color: purple;}
+.buttons img {
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    margin: 10px;
+}
