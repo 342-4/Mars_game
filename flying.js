@@ -29,7 +29,10 @@ function getRandomInt(min, max) {
 function nextDay() {
     day++;
 
+<<<<<<< HEAD
     // 空腹・水分の減少
+=======
+>>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
     hunger -= hungerLoss;
@@ -38,12 +41,16 @@ function nextDay() {
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
 
+<<<<<<< HEAD
     // 空腹または水分がゼロで体力減少
+=======
+>>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
     if (hunger === 0 || thirst === 0) {
         health -= 10;
         if (health < 0) health = 0;
     }
 
+<<<<<<< HEAD
     // 🔽 イベント処理をここで呼び出す
     triggerRandomEvent();
 
@@ -100,6 +107,10 @@ function addEvent(message) {
 }
 
 
+=======
+    updateDisplay();
+}
+>>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
 
 function eat() {
     hunger += 20;
