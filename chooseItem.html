@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>積載物資選択 - 火星ミッション</title>
+  <link rel="stylesheet" href="chooseItem.css" />
+</head>
+
+<body class="background">
+  <h1 style="text-align:center">🚀 積載物資を選ぼう</h1>
+  <p style="text-align:center">積載上限: <strong id="weight-limit">100</strong> kg</p>
+  <p style="text-align:center">現在の合計重量: <strong id="current-weight">0</strong> kg</p>
+  
+  <div id="item-list"></div>
+  
+  <div style="text-align:center" class="summary">
+    <button onclick="startMission()" style="text-align:center">この内容で出発！</button>
+  </div>
+  <script src="chooseItem.js"></script>
+  
+</body>
+
+</html>
