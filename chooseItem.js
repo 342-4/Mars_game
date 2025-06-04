@@ -8,7 +8,7 @@ const items = [
     { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
     { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png"},
     { name: '燃料缶', weight: 20, quantity: 0 },
-    { name: '水', weight: 5, quantity: 0, image: "image/水分.png"},
+    { name: '水', weight: 5, quantity: 0, image: "image/water.png"},
 ];
 
 const itemList = document.getElementById("item-list");//htmlファイルのitem-listブロックに表示
