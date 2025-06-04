@@ -10,6 +10,22 @@ body {
     /* 背景画像を全画面表示 */
     background-position: center top;
     transition: background-position 0.35s ease-in;
+    position: relative; /* 宇宙飛行士を絶対配置するために必要 // 変更点 */
+}
+#astronaut {
+    position: absolute;
+    bottom: 50px;       /* 画面下から120px上に配置（＝背景の左下から少し上） // 変更点 */
+    left: 40px;          /* 左端から少し内側へ // 変更点 */
+    width: 192px;        /* 元が64pxなので4倍（64 * 4）に拡大 // 変更点 */
+    height: auto;
+    image-rendering: pixelated; /* ピクセルアートのにじみ防止 */
+    z-index: 10;         /* 前面に表示 */
+}
+.buttons img {
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    margin: 10px;
 }
 .bar-container {
     width: 200px;
@@ -55,4 +71,17 @@ body {
     height: 64px;
     cursor: pointer;
     margin: 10px;
+}
+/* 宇宙飛行士の移動アニメーション // 変更点 */
+@keyframes walkRight {
+    0% {
+        left: 40px;
+    }
+    100% {
+        left: 110%; /* 画面右端の外に出るまで移動 */
+    }
+}
+
+.walking {
+    animation: walkRight 3s linear forwards; /* 3秒で右へ移動 // 変更点 */
 }

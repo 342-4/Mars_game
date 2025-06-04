@@ -49,6 +49,11 @@ function nextDay() {
     triggerRandomEvent(day);
 
     updateDisplay();
+    // 宇宙飛行士を歩かせる処理 // 変更点
+    const astronaut = document.getElementById("astronaut");
+    astronaut.classList.remove("walking"); // 連続クリック対策で一度削除
+    void astronaut.offsetWidth; // 強制再描画（アニメーション再発火用）
+    astronaut.classList.add("walking");
 }
 
 function triggerRandomEvent(day) {
