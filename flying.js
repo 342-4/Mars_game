@@ -29,10 +29,7 @@ function getRandomInt(min, max) {
 function nextDay() {
     day++;
 
-<<<<<<< HEAD
     // 空腹・水分の減少
-=======
->>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
     hunger -= hungerLoss;
@@ -41,31 +38,28 @@ function nextDay() {
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
 
-<<<<<<< HEAD
     // 空腹または水分がゼロで体力減少
-=======
->>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
     if (hunger === 0 || thirst === 0) {
         health -= 10;
         if (health < 0) health = 0;
     }
 
-<<<<<<< HEAD
     // 🔽 イベント処理をここで呼び出す
-    triggerRandomEvent();
+    triggerRandomEvent(day);
 
     updateDisplay();
 }
-function triggerRandomEvent() {
+
+function triggerRandomEvent(day) {
     const rand = Math.random();
 
-    if (rand < 0.03) {
-        // 宇宙酔い（20%）
+    if (rand < 0.03||day==2) {
+        // 宇宙酔い（3%）2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
-    } else if (rand < 0.35) {
-        // 隕石衝突（15%）
+    } else if (rand < 0.53) {
+        // 隕石衝突（5%）
         addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
         health -= 15;
         thirst -= 10;
@@ -107,10 +101,6 @@ function addEvent(message) {
 }
 
 
-=======
-    updateDisplay();
-}
->>>>>>> bca7c539df5257e4e27e3c4dac896f829d4f9c38
 
 function eat() {
     hunger += 20;
