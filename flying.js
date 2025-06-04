@@ -4,6 +4,7 @@ let hunger = 100;
 let thirst = 100;
 let training = 0;
 let stress = 0;  // ← 追加
+let eventype = []; //イベントの種類判別
 
 function updateDisplay() {
     document.getElementById("day").textContent = day;
@@ -52,19 +53,20 @@ function nextDay() {
 
 function triggerRandomEvent(day) {
     const rand = Math.random();
+    
 
     if (rand < 0.03||day==2) {
         // 宇宙酔い（3%）2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
-    } else if (rand < 0.53) {
+    } else if (rand < 0.08) {
         // 隕石衝突（5%）
         addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
         health -= 15;
         thirst -= 10;
         hunger -= 10;
-    } else if (rand < 0.5) {
+    } else if (rand < 0.23) {
         // 機器の故障（15%）
         const type = getRandomInt(1, 4);
         if (type === 1) {
