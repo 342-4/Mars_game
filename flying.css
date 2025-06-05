@@ -66,6 +66,11 @@ body {
 .blue {background-color: deepskyblue;}
 .green {background-color: seagreen;}
 .purple {background-color: purple;}
+
+.summary {
+    margin-top: 30px;
+}
+
 .buttons img {
     width: 64px;
     height: 64px;

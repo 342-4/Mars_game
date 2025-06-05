@@ -12,33 +12,37 @@
     <img id="astronaut" src="image/man.png" alt="宇宙飛行士"><!--変更点-->
 
     <div class="status-container">
-    <div class="status-bar">
-        体力: <span id="health">100</span>
-        <div class="bar-container">
-            <div id="health-bar" class="bar red"></div>
+        <div class="status-bar">
+            体力: <span id="health">100</span>
+            <div class="bar-container">
+                <div id="health-bar" class="bar red"></div>
+            </div>
+            空腹: <span id="hunger">100</span>
+            <div class="bar-container">
+                <div id="hunger-bar" class="bar orange"></div>
+            </div>
+            水分: <span id="thirst">100</span>
+            <div class="bar-container">
+                <div id="thirst-bar" class="bar blue"></div>
+            </div>
+            トレーニング: <span id="training">0</span>
+            <div class="bar-container">
+                <div id="training-bar" class="bar green"></div>
+            </div>
+            ストレス: <span id="stress">0</span>
+            <div class="bar-container">
+                <div id="stress-bar" class="bar purple"></div>
+            </div>
         </div>
-        空腹: <span id="hunger">100</span>
-        <div class="bar-container">
-            <div id="hunger-bar" class="bar orange"></div>
-        </div>
-        水分: <span id="thirst">100</span>
-        <div class="bar-container">
-            <div id="thirst-bar" class="bar blue"></div>
-        </div>
-        トレーニング: <span id="training">0</span>
-        <div class="bar-container">
-            <div id="training-bar" class="bar green"></div>
-        </div>
-        ストレス: <span id="stress">0</span>
-        <div class="bar-container">
-            <div id="stress-bar" class="bar purple"></div>
-
+    </div>
     <div class="buttons">
         <img src="images/food.png" alt="食事" onclick="eat()" title="食事で空腹・水分を回復">
         <img src="images/training.png" alt="トレーニング" onclick="train()" title="体力・トレーニング上昇">
     </div>
 
-    <button onclick="nextDay()">次の日へ</button>
+    <div style="text-align:center" class="summary">
+        <button onclick="nextDay()" style="text-align:center">次の日へ</button>
+    </div>
     <section id="event-log" style="margin: 30px; padding: 10px; border: 2px solid #888; background-color: #f9f9f9;">
         <h2>🛸 イベントログ</h2>
         <ul id="event-messages">
