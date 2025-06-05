@@ -2,29 +2,16 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>火星シミュレーション：リザルト</title>
-    <link rel="stylesheet" href="result.css" />
+    <link rel="stylesheet" href="result.css">
 </head>
 
 <body class="background">
-    <div class="result-container">
-        <h1>🌟 火星シミュレーション 結果発表 🌟</h1>
-
-        <div class="result-box">
-            <p>日数: <strong id="result-day">---</strong> 日</p>
-            <p>体力: <strong id="result-health">---</strong></p>
-            <p>空腹: <strong id="result-hunger">---</strong></p>
-            <p>水分: <strong id="result-thirst">---</strong></p>
-            <p>トレーニング: <strong id="result-training">---</strong></p>
-            <p>ストレス: <strong id="result-stress">---</strong></p>
-        </div>
-
-        <div class="message" id="result-message"></div>
-
-        <button onclick="location.href='chooseItem.html'">もう一度プレイ</button>
-    </div>
-
+    <h1 class="main-title">宇宙飛行失敗</h1>
+    <p id="day-result"></p>
+    <p id="status-result"></p>
+    <button onclick="location.href='top.html'">トップに戻る</button>
     <script src="result.js"></script>
 </body>
 
