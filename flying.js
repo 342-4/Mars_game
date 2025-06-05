@@ -27,6 +27,13 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function checkGameOver() {
+    if (health <= 0) {
+        //alert("🚨 体力が尽きました…ゲームオーバー！");
+        location.href = "result.html";
+    }
+}
+
 function nextDay() {
     day++;
 
@@ -44,11 +51,7 @@ function nextDay() {
         health -= 10;
         if (health < 0) health = 0;
     }
-
-    //死んだらリザルト画面に行く
-    if (health == 0){
-        location.href = "result.html"
-    }
+    checkGameOver();
 
     // 🔽 イベント処理をここで呼び出す
     triggerRandomEvent(day);
@@ -99,6 +102,7 @@ function triggerRandomEvent(day) {
     if (thirst < 0) thirst = 0;
     if (hunger < 0) hunger = 0;
     if (stress > 100) stress = 100;
+    checkGameOver();
 }
 
 function addEvent(message) {
@@ -109,8 +113,6 @@ function addEvent(message) {
         eventLog.prepend(li);
     }
 }
-
-
 
 function eat() {
     hunger += 20;
