@@ -45,6 +45,11 @@ function nextDay() {
         if (health < 0) health = 0;
     }
 
+    //死んだらリザルト画面に行く
+    if (health == 0){
+        location.href = "result.html"
+    }
+
     // 🔽 イベント処理をここで呼び出す
     triggerRandomEvent(day);
 
@@ -58,8 +63,6 @@ function nextDay() {
 
 function triggerRandomEvent(day) {
     const rand = Math.random();
-    
-
     if (rand < 0.03||day==2) {
         // 宇宙酔い（3%）2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
