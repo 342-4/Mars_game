@@ -13,7 +13,7 @@ body {
     position: relative; /* 宇宙飛行士を絶対配置するために必要 // 変更点 */
 }
 #astronaut {
-    position: absolute;
+    position: fixed;    /*位置固定*/
     bottom: 50px;       /* 画面下から120px上に配置（＝背景の左下から少し上） // 変更点 */
     left: 40px;          /* 左端から少し内側へ // 変更点 */
     width: 192px;        /* 元が64pxなので4倍（64 * 4）に拡大 // 変更点 */
@@ -42,6 +42,20 @@ body {
     transition: width 0.3s ease;
 }
 
+.event-log {/*イベントログ*/
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 250px;
+    height: 200px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 2px solid #888;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 1000;
+    font-size: 14px;
+}
 
 
 .status-container {
