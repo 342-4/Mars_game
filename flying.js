@@ -109,10 +109,11 @@ function addEvent(message) {
     const eventLog = document.getElementById("event-messages");
     if (eventLog) {
         const li = document.createElement("li");
-        li.textContent = message;
+        li.textContent = `【${day}日目】${message}`;  // ← 日数を追加
         eventLog.prepend(li);
     }
 }
+
 
 function eat() {
     hunger += 20;
