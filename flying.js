@@ -27,15 +27,28 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//異常状態の管理（飢餓、水分不足、ストレス過多）
+function checkAbnormalStatus() {
+    const status = []
+    if (hunger <= 20) status.push("🥣 飢餓状態");
+    if (thirst <= 20) status.push("🚱 水分不足");
+    if (stress >= 60) status.push("😵 ストレス過多");
+    // 保存（カンマ区切りの文字列として）
+    localStorage.setItem("abnormalStatus", JSON.stringify(status));
+}
+
 function checkGameOver() {
-    if (health <= 0) {
-        //alert("🚨 体力が尽きました…ゲームオーバー！");
-        location.href = "result.html";
-    }
+    checkAbnormalStatus();  // ← 異常状態を記録
+    localStorage.setItem("finalDay", day);  // ← 日数を保存
+    if (health <= 0) location.href = "result.html";
 }
 
 function nextDay() {
     day++;
+
+    checkAbnormalStatus();
+    const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
+    const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
 
     // 空腹・水分の減少
     const hungerLoss = getRandomInt(10, 15);
@@ -51,10 +64,9 @@ function nextDay() {
         health -= 10;
         if (health < 0) health = 0;
     }
-    checkGameOver();
 
     // 🔽 イベント処理をここで呼び出す
-    triggerRandomEvent(day);
+    triggerRandomEvent(abnormalStatus,day);
 
     updateDisplay();
     // 宇宙飛行士を歩かせる処理 // 変更点
@@ -62,9 +74,11 @@ function nextDay() {
     astronaut.classList.remove("walking"); // 連続クリック対策で一度削除
     void astronaut.offsetWidth; // 強制再描画（アニメーション再発火用）
     astronaut.classList.add("walking");
+
+    checkGameOver();
 }
 
-function triggerRandomEvent(day) {
+function triggerRandomEvent(abnormalStatus,day) {
     const rand = Math.random();
     if (rand < 0.03||day==2) {
         // 宇宙酔い（3%）2日目に強制発生
@@ -93,8 +107,24 @@ function triggerRandomEvent(day) {
             addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
             stress += 10;
         }
-    } else {
-        addEvent("✅ 今日も特に異常なし。");
+    } else if (abnormalStatus.length > 0){
+        abnormalStatus.forEach(status =>{
+            switch (status){
+                case "🥣 飢餓状態" :
+                    addEvent("⚠️ 【緊急】空腹です！食事を摂ってください。");
+                    break;
+                case "🚱 水分不足":
+                    addEvent("⚠️ 【緊急】水分不足です！水を取ってください");
+                    break;
+                case "😵 ストレス過多":
+                    addEvent("⚠️ 【緊急】ストレスが限界に近づいています！コミュニケーションをとってください。");
+                    break;
+                default : 
+                    addEvent(`⚠️ 異常状態: ${status}`);
+            }
+        })
+    } else{
+        addEvent("✅ 今日は特に異常なし。");
     }
 
     // ステータスの限界値チェック
@@ -102,7 +132,6 @@ function triggerRandomEvent(day) {
     if (thirst < 0) thirst = 0;
     if (hunger < 0) hunger = 0;
     if (stress > 100) stress = 100;
-    checkGameOver();
 }
 
 function addEvent(message) {
