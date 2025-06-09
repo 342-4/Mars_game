@@ -143,6 +143,11 @@ function addEvent(message) {
     }
 }
 
+function toggleLog() {
+    const logSection = document.getElementById("event-log");
+    logSection.classList.toggle("expanded");
+}
+
 
 function eat() {
     hunger += 20;
@@ -164,5 +169,10 @@ function train() {
     if (training > 100) training = 100;
     updateDisplay();
 }
+function toggleLogSize() {
+    const logSection = document.getElementById("event-log");
+    logSection.classList.toggle("collapsed");
+}
+
 
 updateDisplay();
