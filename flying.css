@@ -125,3 +125,73 @@ body {
     padding-left: 0;
     margin: 0;
 }
+/* 元の固定位置を無効化 */
+#bag-button {
+  position: static; /* ← fixedから変更 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 10px; /* 他のボタンと同じマージン */
+  vertical-align: middle;
+}
+
+/* アイコンサイズ統一 */
+.bag-icon {
+  width: 64px;
+  height: 64px;
+}
+
+
+/* モーダル背景と表示内容 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.modal.hidden {
+  display: none;
+}
+.modal-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* 薄暗い背景 */
+  z-index: 998;
+}
+.modal-content {
+  position: relative;
+  background: #111;
+  color: #eee;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 800px;
+  width: 90%;
+  z-index: 999;
+  text-align: center;
+}
+#item-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.item {
+  background: black;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+.item img.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px auto;
+}

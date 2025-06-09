@@ -38,6 +38,10 @@
     <div class="buttons">
         <img src="images/food.png" alt="食事" onclick="eat()" title="食事で空腹・水分を回復">
         <img src="images/training.png" alt="トレーニング" onclick="train()" title="体力・トレーニング上昇">
+         <!-- 🔽 リュックボタンをここに移動 -->
+        <button id="bag-button" title="所持品を見る">
+        <img src="image/backpack.png" alt="バック" class="bag-icon">
+        </button>
     </div>
 
     <div style="text-align:center" class="summary">
@@ -51,6 +55,20 @@
         <li>【1日目】宇宙船は順調に航行中です。</li>
     </ul>
 </section>
+
+
+<!-- 所持品モーダル（chooseitem を再利用） -->
+<div id="bag-modal" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <h2>🎒 所持品一覧</h2>
+    <p>積載上限: <strong id="weight-limit">100</strong> kg</p>
+    <p>現在の合計重量: <strong id="current-weight">0</strong> kg</p>
+    <div id="item-list"></div>
+    <button onclick="closeBag()">閉じる</button>
+  </div>
+</div>
+
 
 
 

@@ -173,6 +173,51 @@ function toggleLogSize() {
     const logSection = document.getElementById("event-log");
     logSection.classList.toggle("collapsed");
 }
+const weightLimit = 100;
+let currentWeight = 0;
+
+const items = [
+  { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
+  { name: '缶詰', weight: 10, quantity: 0, image: "image/food.png" },
+  { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
+  { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
+  { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
+  { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuel.png" },
+  { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
+];
+
+const itemList = document.getElementById("item-list");
+const currentWeightText = document.getElementById("current-weight");
+
+// 所持品の描画
+function renderItems() {
+  itemList.innerHTML = '';
+  currentWeight = 0;
+
+  items.forEach((item) => {
+    currentWeight += item.weight * item.quantity;
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" class="item-image">
+      <span>${item.name} (${item.weight}kg) × ${item.quantity} 個</span>
+    `;
+    itemList.appendChild(div);
+  });
+
+  currentWeightText.textContent = currentWeight;
+}
+
+// モーダル表示・非表示
+document.getElementById("bag-button").addEventListener("click", () => {
+  renderItems();
+  document.getElementById("bag-modal").classList.remove("hidden");
+});
+
+function closeBag() {
+  document.getElementById("bag-modal").classList.add("hidden");
+}
 
 
 updateDisplay();
