@@ -144,9 +144,16 @@ function addEvent(message) {
 }
 
 function toggleLog() {
-    const logSection = document.getElementById("event-log");
-    logSection.classList.toggle("expanded");
+    const log = document.getElementById("event-log");
+    const button = document.getElementById("toggle-log");
+    log.classList.toggle("expanded");
+    if (log.classList.contains("expanded")) {
+        button.textContent = "▲";
+    } else {
+        button.textContent = "▼";
+    }
 }
+
 
 
 function eat() {
