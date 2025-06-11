@@ -77,56 +77,50 @@ function updateHealthHighlight() {
 
 //次の日に進める処理
 function nextDay() {
-    day++;//日付を一日進める
-
-    checkAbnormalStatus();//異常状態の管理
-    const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
-    const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
-
-    //体力の増加
-    if(hunger >= 50 && thirst >= 50){
-        const healthpls = getRandomInt(20, 25);
-        health += healthpls;
-        if(health > 100){
-            health = 100;
-        }
-    }
-    
-
-    //空腹・水分・筋力の減少
-    const hungerLoss = getRandomInt(10, 15);
-    const thirstLoss = getRandomInt(5, 10);
-    const trainingLoss = getRandomInt(5, 10);
-    const stressPlus = getRandomInt(2,5);
-    hunger -= hungerLoss;
-    thirst -= thirstLoss;
-    training -= trainingLoss;
-    //0未満にならないようにする    stress += stressPlus
-
-    if (hunger < 0) hunger = 0;
-    if (thirst < 0) thirst = 0;
-    if (training < 0) training = 0;
-
-    // 空腹/水分/筋力のいずれかがゼロで体力減少
-    if (hunger === 0 || thirst === 0 || training == 0) {
-        health -= 10;
-        //0未満にならないようにする
-        if (health < 0) health = 0;
-    }
-
-    //イベント処理
-    triggerRandomEvent(abnormalStatus,day);
-
-    updateDisplay();
-    //宇宙飛行士を歩かせる処理
     const astronaut = document.getElementById("astronaut");
-    astronaut.classList.remove("walking"); // 連続クリック対策で一度削除
-    void astronaut.offsetWidth; // 強制再描画（アニメーション再発火用）
+    astronaut.classList.remove("walking"); // 連続クリック対策
+    void astronaut.offsetWidth; // 強制再描画でアニメーション再発火
     astronaut.classList.add("walking");
 
-    //ゲームオーバー判定
-    checkGameOver();
+    // アニメーション終了後にステータス処理を実行
+    setTimeout(() => {
+        day++; // 日付を進める
+
+        checkAbnormalStatus(); // 異常状態の確認
+        const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
+        const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
+
+        // 条件により体力回復
+        if (hunger >= 50 && thirst >= 50) {
+            const healthpls = getRandomInt(20, 25);
+            health = Math.min(100, health + healthpls);
+        }
+
+        // ステータスの減少
+        hunger -= getRandomInt(10, 15);
+        thirst -= getRandomInt(5, 10);
+        training -= getRandomInt(5, 10);
+        stress += getRandomInt(2, 5);
+
+        hunger = Math.max(0, hunger);
+        thirst = Math.max(0, thirst);
+        training = Math.max(0, training);
+
+        if (hunger === 0 || thirst === 0 || training === 0) {
+            health -= 10;
+            if (health < 0) health = 0;
+        }
+
+        triggerRandomEvent(abnormalStatus, day); // イベント発生
+        updateDisplay(); // 画面表示更新
+
+        // アニメーションを止める
+        astronaut.classList.remove("walking");
+
+        checkGameOver(); // ゲームオーバー判定
+    }, 3000); // 3秒後にステータス処理
 }
+
 
 //ランダムイベント発生関数
 function triggerRandomEvent(abnormalStatus,day) {
