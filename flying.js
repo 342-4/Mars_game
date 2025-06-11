@@ -1,11 +1,16 @@
-let day = 1;
-let health = 100;
-let hunger = 100;
-let thirst = 100;
-let training = 0;
-let stress = 0;  // ← 追加
+//ステータスの初期化と表示
+let day = 1;//日付
+let health = 100;//体力
+let hunger = 100;//空腹度
+let thirst = 100;//水分量
+let training = 0;//筋肉量
+let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
 
+const weightLimit = 100;//最大積載量
+let currentWeight = 0;//所持している合計重量保持
+
+//画面表示更新関数
 function updateDisplay() {
     document.getElementById("day").textContent = day;
     document.getElementById("health").textContent = health;
@@ -21,8 +26,7 @@ function updateDisplay() {
     document.getElementById("stress-bar").style.width = `${stress}%`;
 }
 
-
-
+//指定した範囲からランダムな数を生成する関数
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -37,51 +41,56 @@ function checkAbnormalStatus() {
     localStorage.setItem("abnormalStatus", JSON.stringify(status));
 }
 
+//ゲームオーバー判定
 function checkGameOver() {
-    checkAbnormalStatus();  // ← 異常状態を記録
-    localStorage.setItem("finalDay", day);  // ← 日数を保存
-    if (health <= 0) location.href = "result.html";
+    checkAbnormalStatus();  //異常状態を記録
+    localStorage.setItem("finalDay", day);  //日数を保存
+    if (health <= 0) location.href = "result.html";//結果ページに移行
 }
 
+//次の日に進める処理
 function nextDay() {
-    day++;
+    day++;//日付を一日進める
 
-    checkAbnormalStatus();
+    checkAbnormalStatus();//異常状態の管理
     const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
     const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
 
-    // 空腹・水分の減少
+    //空腹・水分の減少
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
     hunger -= hungerLoss;
     thirst -= thirstLoss;
-
+    //0未満にならないようにする
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
 
     // 空腹または水分がゼロで体力減少
     if (hunger === 0 || thirst === 0) {
         health -= 10;
+        //0未満にならないようにする
         if (health < 0) health = 0;
     }
 
-    // 🔽 イベント処理をここで呼び出す
+    //イベント処理
     triggerRandomEvent(abnormalStatus,day);
 
     updateDisplay();
-    // 宇宙飛行士を歩かせる処理 // 変更点
+    //宇宙飛行士を歩かせる処理
     const astronaut = document.getElementById("astronaut");
     astronaut.classList.remove("walking"); // 連続クリック対策で一度削除
     void astronaut.offsetWidth; // 強制再描画（アニメーション再発火用）
     astronaut.classList.add("walking");
 
+    //ゲームオーバー判定
     checkGameOver();
 }
 
+//ランダムイベント発生関数
 function triggerRandomEvent(abnormalStatus,day) {
-    const rand = Math.random();
+    const rand = Math.random();//ランダムな小数値
     if (rand < 0.03||day==2) {
-        // 宇宙酔い（3%）2日目に強制発生
+        // 宇宙酔い（3%）または、2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
@@ -108,7 +117,8 @@ function triggerRandomEvent(abnormalStatus,day) {
             stress += 10;
         }
     } else if (abnormalStatus.length > 0){
-        abnormalStatus.forEach(status =>{
+        //ステータス上の異常状態を報告
+        abnormalStatus.forEach(status =>{//異常状態を一個ずつチェック、警告表示
             switch (status){
                 case "🥣 飢餓状態" :
                     addEvent("⚠️ 【緊急】空腹です！食事を摂ってください。");
@@ -134,18 +144,10 @@ function triggerRandomEvent(abnormalStatus,day) {
     if (stress > 100) stress = 100;
 }
 
-function addEvent(message) {
-    const eventLog = document.getElementById("event-messages");
-    if (eventLog) {
-        const li = document.createElement("li");
-        li.textContent = `【${day}日目】${message}`;  // ← 日数を追加
-        eventLog.prepend(li);
-    }
-}
-
+//イベントログ作成
 function toggleLog() {
-    const log = document.getElementById("event-log");
-    const button = document.getElementById("toggle-log");
+    const log = document.getElementById("event-log");//ログ本体
+    const button = document.getElementById("toggle-log");//拡大縮小のボタン
     log.classList.toggle("expanded");
     if (log.classList.contains("expanded")) {
         button.textContent = "▲";
@@ -154,17 +156,28 @@ function toggleLog() {
     }
 }
 
+//イベントログにイベントを追加
+function addEvent(message) {
+    const eventLog = document.getElementById("event-messages");
+    if (eventLog) {
+        const li = document.createElement("li");//リストの追加
+        li.textContent = `【${day}日目】${message}`;//日数を追加
+        eventLog.prepend(li);//作成した上記のリストをログの先頭に追加
+    }
+}
 
-
+//食事の処理
 function eat() {
     hunger += 20;
     thirst += 10;
     if (hunger > 100) hunger = 100;
     if (thirst > 100) thirst = 100;
-    updateDisplay();
+    updateDisplay();//表示更新
 }
 
+//トレーニング処理
 function train() {
+    //トレーニングにするのに十分な状態であるかの確認
     if (hunger < 20 || thirst < 20 || health < 10) {
         alert("体力・空腹・水分が足りません！！！");
         return;
@@ -176,13 +189,14 @@ function train() {
     if (training > 100) training = 100;
     updateDisplay();
 }
-function toggleLogSize() {
-    const logSection = document.getElementById("event-log");
-    logSection.classList.toggle("collapsed");
-}
-const weightLimit = 100;
-let currentWeight = 0;
 
+//イベントログのサイズを切り替える処理
+function toggleLogSize() {
+    const logSection = document.getElementById("event-log");//イベントログの枠所得
+    logSection.classList.toggle("collapsed");//縮小表示と通常表示の切り替え
+}
+
+//所持できるアイテムの情報を配列で定義
 const items = [
   { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
   { name: '缶詰', weight: 10, quantity: 0, image: "image/food.png" },
@@ -201,8 +215,8 @@ function renderItems() {
   itemList.innerHTML = '';
   currentWeight = 0;
 
-  items.forEach((item) => {
-    currentWeight += item.weight * item.quantity;
+  items.forEach((item) => {//全アイテムについて一つずつ処理を行う
+    currentWeight += item.weight * item.quantity;//重さ×個数
 
     const div = document.createElement("div");
     div.className = "item";
@@ -212,19 +226,20 @@ function renderItems() {
     `;
     itemList.appendChild(div);
   });
-
+  //現在の合計重量を画面に表示
   currentWeightText.textContent = currentWeight;
 }
 
-// モーダル表示・非表示
+// モーダル(所持品リスト)表示・非表示
 document.getElementById("bag-button").addEventListener("click", () => {
   renderItems();
   document.getElementById("bag-modal").classList.remove("hidden");
 });
 
+//所持品モーダルを閉じる
 function closeBag() {
   document.getElementById("bag-modal").classList.add("hidden");
 }
 
-
+//初期表示更新
 updateDisplay();
