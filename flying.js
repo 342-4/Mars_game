@@ -24,6 +24,8 @@ function updateDisplay() {
     document.getElementById("thirst-bar").style.width = `${thirst}%`;
     document.getElementById("training-bar").style.width = `${training}%`;
     document.getElementById("stress-bar").style.width = `${stress}%`;
+
+    updateHealthHighlight();
 }
 
 //指定した範囲からランダムな数を生成する関数
@@ -47,6 +49,20 @@ function checkGameOver() {
     localStorage.setItem("finalDay", day);  //日数を保存
     if (health <= 0) location.href = "result.html";//結果ページに移行
 }
+
+//体力バーの枠線を制御する関数追加
+function updateHealthHighlight() {
+  const hunger = parseInt(document.getElementById("hunger").textContent);
+  const thirst = parseInt(document.getElementById("thirst").textContent);
+  const healthBar = document.getElementById("health-bar");
+
+  if (hunger >= 50 && thirst >= 50) {
+    healthBar.classList.add("health-highlight");
+  } else {
+    healthBar.classList.remove("health-highlight");
+  }
+}
+
 
 //次の日に進める処理
 function nextDay() {
