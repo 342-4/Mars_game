@@ -3,7 +3,7 @@ let day = 1;//日付
 let health = 100;//体力
 let hunger = 100;//空腹度
 let thirst = 100;//水分量
-let training = 0;//筋肉量
+let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
 
@@ -56,17 +56,20 @@ function nextDay() {
     const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
     const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
 
-    //空腹・水分の減少
+    //空腹・水分・筋力の減少
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
+    const trainingLoss = getRandomInt(5, 10);
     hunger -= hungerLoss;
     thirst -= thirstLoss;
+    training -= trainingLoss;
     //0未満にならないようにする
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
+    if (training < 0) training = 0;
 
-    // 空腹または水分がゼロで体力減少
-    if (hunger === 0 || thirst === 0) {
+    // 空腹/水分/筋力のいずれかがゼロで体力減少
+    if (hunger === 0 || thirst === 0 || training == 0) {
         health -= 10;
         //0未満にならないようにする
         if (health < 0) health = 0;
@@ -186,7 +189,7 @@ function train() {
     hunger -= 10;
     thirst -= 10;
     training += 5;
-    if (training > 100) training = 100;
+    if (training > 50) training = 50;
     updateDisplay();
 }
 
