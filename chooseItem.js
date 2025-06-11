@@ -3,7 +3,7 @@ let currentWeight = 0;
 
 const items = [
     { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png"},
-    { name: '缶詰', weight: 10, quantity: 0, image: "image/food.png" },
+    { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
     { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
     { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
     { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png"},
