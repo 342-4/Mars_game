@@ -48,6 +48,22 @@ function checkAbnormalStatus() {
     }
 }
 
+function checkGameOver() {
+    checkAbnormalStatus();  // ← 異常状態を記録
+    localStorage.setItem("finalDay", day);  // ← 日数を保存
+    if (health <= 0) location.href = "result.html";
+}
+
+//異常状態の管理（飢餓、水分不足、ストレス過多）
+function checkAbnormalStatus() {
+    const status = []
+    if (hunger <= 20) status.push("🥣 飢餓状態");
+    if (thirst <= 20) status.push("🚱 水分不足");
+    if (stress >= 60) status.push("😵 ストレス過多");
+    // 保存（カンマ区切りの文字列として）
+    localStorage.setItem("abnormalStatus", JSON.stringify(status));
+}
+
 //ゲームオーバー判定
 function checkGameOver() {
     checkAbnormalStatus();  //異常状態を記録
@@ -90,10 +106,12 @@ function nextDay() {
     //空腹・水分・筋力の減少
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
+    const trainingLoss = getRandomInt(5, 10);
     const stressPlus = getRandomInt(2,5);
     hunger -= hungerLoss;
     thirst -= thirstLoss;
-    stress += stressPlus
+    training -= trainingLoss;
+    //0未満にならないようにする    stress += stressPlus
 
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
@@ -150,7 +168,24 @@ function triggerRandomEvent(abnormalStatus,day) {
             addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
             stress += 10;
         }
-    }else{
+    } else if (abnormalStatus.length > 0){
+        //ステータス上の異常状態を報告
+        abnormalStatus.forEach(status =>{//異常状態を一個ずつチェック、警告表示
+            switch (status){
+                case "🥣 飢餓状態" :
+                    addEvent("⚠️ 【緊急】空腹です！食事を摂ってください。");
+                    break;
+                case "🚱 水分不足":
+                    addEvent("⚠️ 【緊急】水分不足です！水を取ってください");
+                    break;
+                case "😵 ストレス過多":
+                    addEvent("⚠️ 【緊急】ストレスが限界に近づいています！コミュニケーションをとってください。");
+                    break;
+                default : 
+                    addEvent(`⚠️ 異常状態: ${status}`);
+            }
+        })
+    } else{
         addEvent("✅ 今日は特に異常なし。");
     }
 
@@ -183,7 +218,19 @@ function addEvent(message) {
     }
 }
 
-//食事の処理
+function toggleLog() {
+    const log = document.getElementById("event-log");
+    const button = document.getElementById("toggle-log");
+    log.classList.toggle("expanded");
+    if (log.classList.contains("expanded")) {
+        button.textContent = "▲";
+    } else {
+        button.textContent = "▼";
+    }
+}
+
+
+
 function eat() {
     hunger += 20;
     thirst += 10;
@@ -197,6 +244,7 @@ function train() {
     //トレーニングにするのに十分な状態であるかの確認
     if (hunger < 20 || thirst < 20 || health < 10) {
         alert("体力・空腹・水分が足りません！！！");
+        alert("体力・空腹・水分が足りません！！！");
         return;
     }
     health -= 5;
@@ -206,14 +254,12 @@ function train() {
     if (training > 50) training = 50;
     updateDisplay();
 }
-
-//イベントログのサイズを切り替える処理
 function toggleLogSize() {
-    const logSection = document.getElementById("event-log");//イベントログの枠所得
-    logSection.classList.toggle("collapsed");//縮小表示と通常表示の切り替え
+    const logSection = document.getElementById("event-log");
+    logSection.classList.toggle("collapsed");
 }
 
-//所持できるアイテムの情報を配列で定義
+
 const items = [
   { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
   { name: '缶詰', weight: 10, quantity: 0, image: "image/food.png" },
@@ -226,6 +272,14 @@ const items = [
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
+
+
+//イベントログのサイズを切り替える処理
+function toggleLogSize() {
+    const logSection = document.getElementById("event-log");//イベントログの枠所得
+    logSection.classList.toggle("collapsed");//縮小表示と通常表示の切り替え
+}
+
 
 // 所持品の描画
 function renderItems() {
