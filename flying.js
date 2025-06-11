@@ -54,16 +54,6 @@ function checkGameOver() {
     if (health <= 0) location.href = "result.html";
 }
 
-//異常状態の管理（飢餓、水分不足、ストレス過多）
-function checkAbnormalStatus() {
-    const status = []
-    if (hunger <= 20) status.push("🥣 飢餓状態");
-    if (thirst <= 20) status.push("🚱 水分不足");
-    if (stress >= 60) status.push("😵 ストレス過多");
-    // 保存（カンマ区切りの文字列として）
-    localStorage.setItem("abnormalStatus", JSON.stringify(status));
-}
-
 //ゲームオーバー判定
 function checkGameOver() {
     checkAbnormalStatus();  //異常状態を記録
@@ -168,24 +158,7 @@ function triggerRandomEvent(abnormalStatus,day) {
             addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
             stress += 10;
         }
-    } else if (abnormalStatus.length > 0){
-        //ステータス上の異常状態を報告
-        abnormalStatus.forEach(status =>{//異常状態を一個ずつチェック、警告表示
-            switch (status){
-                case "🥣 飢餓状態" :
-                    addEvent("⚠️ 【緊急】空腹です！食事を摂ってください。");
-                    break;
-                case "🚱 水分不足":
-                    addEvent("⚠️ 【緊急】水分不足です！水を取ってください");
-                    break;
-                case "😵 ストレス過多":
-                    addEvent("⚠️ 【緊急】ストレスが限界に近づいています！コミュニケーションをとってください。");
-                    break;
-                default : 
-                    addEvent(`⚠️ 異常状態: ${status}`);
-            }
-        })
-    } else{
+    }else{
         addEvent("✅ 今日は特に異常なし。");
     }
 
