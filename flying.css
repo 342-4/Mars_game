@@ -37,6 +37,29 @@ body {
     overflow: hidden;
 }
 
+#astronaut.walking {
+    animation: walkRight 3s linear forwards;
+}
+
+
+#screen-fade.active {
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity 1s;
+}
+
+#screen-fade {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    transition: opacity 1s;
+}
+
+
 .bar {
     height: 100%;
     width: 100%;
