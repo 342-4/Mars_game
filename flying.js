@@ -36,11 +36,16 @@ function getRandomInt(min, max) {
 //異常状態の管理（飢餓、水分不足、ストレス過多）
 function checkAbnormalStatus() {
     const status = []
-    if (hunger <= 20) status.push("🥣 飢餓状態");
-    if (thirst <= 20) status.push("🚱 水分不足");
-    if (stress >= 60) status.push("😵 ストレス過多");
+    if (hunger <= 20) status.push("🥣 飢餓");
+    if (thirst <= 20) status.push("🚱 水不足");
+    if (stress >= 35) status.push("😵 ストレス");
     // 保存（カンマ区切りの文字列として）
     localStorage.setItem("abnormalStatus", JSON.stringify(status));
+
+    const statusDiv = document.getElementById("abnormal-status");
+    if (statusDiv) {
+        statusDiv.textContent = status.length > 0 ? `${status.join(" ")}` : "";
+    }
 }
 
 //ゲームオーバー判定
@@ -85,11 +90,11 @@ function nextDay() {
     //空腹・水分・筋力の減少
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
-    const trainingLoss = getRandomInt(5, 10);
+    const stressPlus = getRandomInt(2,5);
     hunger -= hungerLoss;
     thirst -= thirstLoss;
-    training -= trainingLoss;
-    //0未満にならないようにする
+    stress += stressPlus
+
     if (hunger < 0) hunger = 0;
     if (thirst < 0) thirst = 0;
     if (training < 0) training = 0;
@@ -145,24 +150,7 @@ function triggerRandomEvent(abnormalStatus,day) {
             addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
             stress += 10;
         }
-    } else if (abnormalStatus.length > 0){
-        //ステータス上の異常状態を報告
-        abnormalStatus.forEach(status =>{//異常状態を一個ずつチェック、警告表示
-            switch (status){
-                case "🥣 飢餓状態" :
-                    addEvent("⚠️ 【緊急】空腹です！食事を摂ってください。");
-                    break;
-                case "🚱 水分不足":
-                    addEvent("⚠️ 【緊急】水分不足です！水を取ってください");
-                    break;
-                case "😵 ストレス過多":
-                    addEvent("⚠️ 【緊急】ストレスが限界に近づいています！コミュニケーションをとってください。");
-                    break;
-                default : 
-                    addEvent(`⚠️ 異常状態: ${status}`);
-            }
-        })
-    } else{
+    }else{
         addEvent("✅ 今日は特に異常なし。");
     }
 

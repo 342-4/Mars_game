@@ -9,12 +9,13 @@
 
 <body class = "background">
     <h2>📅 日数: <span id="day">1</span> 日目</h2>
-    <img id="astronaut" src="image/man.png" alt="宇宙飛行士"><!--変更点-->
+    <img id="astronaut" src="image/man.png" alt="宇宙飛行士">
 
     <div class="status-container">
         <div class="status-bar">
-            体力: <span id="health">100</span>
-            <div class="bar-container">
+            <div>
+                体力: <span id="health">100</span>
+                <span id="abnormal-status" class="abnormal-status"></span>        </div>            <div class="bar-container">
                 <div id="health-bar" class="bar red"></div>
             </div>
             空腹: <span id="hunger">100</span>

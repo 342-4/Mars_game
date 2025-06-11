@@ -96,7 +96,12 @@ body {
     cursor: pointer;
 }
 
-
+.abnormal-status {
+    margin-bottom: 5px;
+    color: crimson;
+    font-weight: bold;
+    font-size: 0.9em;
+}
 
 .status-container {
     position: fixed;
