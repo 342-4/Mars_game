@@ -56,6 +56,16 @@ function nextDay() {
     const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
     const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
 
+    //体力の増加
+    if(hunger >= 50 && thirst >= 50){
+        const healthpls = getRandomInt(20, 25);
+        health += healthpls;
+        if(health > 100){
+            health = 100;
+        }
+    }
+    
+
     //空腹・水分・筋力の減少
     const hungerLoss = getRandomInt(10, 15);
     const thirstLoss = getRandomInt(5, 10);
