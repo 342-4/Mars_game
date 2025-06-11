@@ -7,9 +7,19 @@ const items = [
     { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
     { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
     { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png"},
-    { name: '燃料缶', weight: 20, quantity: 0 },
+    { name: '燃料缶', weight: 20, quantity: 0, image:"image/fuelcan.png" },
     { name: '水', weight: 5, quantity: 0, image: "image/water.png"},
 ];
+const itemDescriptions = {
+    '加水食品': '加水してすぐ食べられる便利な食品（仮）',
+    '缶詰': '長期保存が可能な栄養食品（仮）',
+    '半乾燥食品': '軽量で保存性の高い食品（仮）',
+    '酸素ボンベ': '呼吸用の酸素を供給（仮）',
+    '修理キット': '緊急時に設備を修理するための工具（仮）',
+    '燃料缶': '移動や発電に使う燃料（仮）',
+    '水': '飲料水。生存に不可欠（仮）'
+};
+
 
 const itemList = document.getElementById("item-list");//htmlファイルのitem-listブロックに表示
 const currentWeightText = document.getElementById("current-weight");//htmlファイルのcurrent-weightブロックに表示
@@ -21,8 +31,8 @@ function renderItems() {
         const div = document.createElement("div");
         div.className = "item";
         div.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" class="item-image">
-        <span>${item.name} (${item.weight}kg)× ${item.quantity} 個</span>   
+        <img src="${item.image}" alt="${item.name}" class="item-image" title="${itemDescriptions[item.name] || ''}">
+        <span title="${itemDescriptions[item.name] || ''}">${item.name} (${item.weight}kg)× ${item.quantity} 個</span>   
         <div>
             <button class="minus" onclick="changeItem(${index}, -1)">−</button>
             <button class="plus" onclick="changeItem(${index}, 1)">＋</button>
