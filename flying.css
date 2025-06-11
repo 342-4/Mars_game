@@ -58,6 +58,13 @@ body {
   pointer-events: none; /* ユーザー操作に干渉しない */
 }
 
+.health-highlight {
+  border: 3px solid yellow;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+
 .event-log {
     position: fixed;
     top: 10px;
