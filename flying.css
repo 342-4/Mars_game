@@ -1,18 +1,25 @@
+/* スクロールを無効にする */
+html, body {
+    overflow: hidden;
+    height: 100%;
+}
+
+
 body {
     font-family: sans-serif;
     text-align: center;
 }
-.background{
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
     background-image: url(image/spaceShip.png);
+    background-size: cover;
     background-repeat: no-repeat;
-    /* 背景画像を繰り返し表示させない */
-    background-size: contain;
-    /* 背景画像を全画面表示 */
-    background-position: center top;
-    transition: background-position 0.35s ease-in;
-    position: relative; /* 宇宙飛行士を絶対配置するために必要 // 変更点 */
-    min-height: 100vh; /* 画面全体の高さ確保 */
+    background-position: center center;
+    z-index: -1;
 }
+
 #astronaut {
     position: fixed;    /*位置固定*/
     bottom: 50px;       /* 画面下から120px上に配置（＝背景の左下から少し上） // 変更点 */
