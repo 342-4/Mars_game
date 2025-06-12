@@ -277,6 +277,16 @@ function renderItems() {
   currentWeightText.textContent = currentWeight;
 }
 
+function resizeBackground() {
+    const bg = document.querySelector('.background');
+    bg.style.width = `${window.innerWidth}px`;
+    bg.style.height = `${window.innerHeight}px`;
+}
+
+window.addEventListener('resize', resizeBackground);
+window.addEventListener('load', resizeBackground);
+
+
 // モーダル(所持品リスト)表示・非表示
 document.getElementById("bag-button").addEventListener("click", () => {
   renderItems();
