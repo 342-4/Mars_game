@@ -35,6 +35,59 @@ body {
     cursor: pointer;
     margin: 10px;
 }
+
+.buttons {
+  /* 必要に応じて上側のボタンのスタイル */
+  margin-bottom: 1rem; /* リュックボタンの下に余白 */
+  text-align: center;
+}
+
+.lower-buttons button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #eee;
+  background: linear-gradient(145deg, #6a7b8a, #4d5a68); /* 控えめな青グレー */
+  border: 2px solid #2f3b47;
+  border-radius: 10px;
+  padding: 10px 25px;
+  margin: 0 10px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease;
+  user-select: none;
+  opacity: 0.85; /* 少し透明にして控えめな印象に */
+}
+
+.lower-buttons button:hover {
+  background: linear-gradient(145deg, #5a6a78, #3f4c58);
+}
+
+.lower-buttons button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+
+.lower-buttons {
+  position: fixed;
+  bottom: 40px;   /* 画面下から40px上 */
+  width: 100%;
+  text-align: center;
+  margin-top: 0;  /* marginはリセット */
+}
+
+
+.lower-buttons img {
+  margin: 0 10px;
+  cursor: pointer;
+  width: 40px;
+  height: auto;
+  vertical-align: middle;
+}
+
+
 .bar-container {
   position: relative;
     width: 200px;
@@ -86,6 +139,34 @@ body {
   z-index: 1;
   opacity: 0.6;
 }
+
+.day-display {
+    background-color: rgba(128, 0, 128, 0.8); /* 透過率60%（かなり濃い） */
+
+    border: 2px solid #a050f0; /* 明るめ紫の枠線 */
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin: 20px;
+    display: inline-block;
+    box-shadow: 2px 2px 6px rgba(160, 100, 255, 0.5);
+    font-family: 'Segoe UI', sans-serif;
+    animation: glow-purple 3s infinite;
+}
+
+.day-display h2 {
+    color: #d4aaff; /* 明るめの文字色で読みやすく */
+    font-size: 1.8em;
+    margin: 0;
+}
+
+/* 紫に光るアニメーション */
+@keyframes glow-purple {
+    0% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(200, 150, 255, 0.9); }
+    100% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
+}
+
+
 
 .event-log {
     position: fixed;
@@ -145,14 +226,12 @@ body {
 
 .summary {
     margin-top: 30px;
+    clear: both; /* 追加 */
+    text-align: center;
 }
 
-.buttons img {
-    width: 64px;
-    height: 64px;
-    cursor: pointer;
-    margin: 10px;
-}
+
+
 /* 宇宙飛行士の移動アニメーション // 変更点 */
 @keyframes walkRight {
     0% {
