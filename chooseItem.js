@@ -1,6 +1,7 @@
 const weightLimit = 100;
 let currentWeight = 0;
 
+//アイテムの定義
 const items = [
     { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png"},
     { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
