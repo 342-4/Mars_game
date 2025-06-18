@@ -48,11 +48,7 @@ function checkAbnormalStatus() {
     }
 }
 
-function checkGameOver() {
-    checkAbnormalStatus();  // ← 異常状態を記録
-    localStorage.setItem("finalDay", day);  // ← 日数を保存
-    if (health <= 0) location.href = "result.html";
-}
+
 
 //ゲームオーバー判定
 function checkGameOver() {
@@ -245,6 +241,17 @@ const items = [
   { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuel.png" },
   { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
 ];
+// chooseItem.js から cargo データを取得
+const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
+
+// savedCargo の内容を items に反映
+savedCargo.forEach(savedItem => {
+  const match = items.find(item => item.name === savedItem.name);
+  if (match) {
+    match.quantity = savedItem.quantity;
+  }
+});
+
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
