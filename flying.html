@@ -43,13 +43,17 @@
     </div>
    
     <div class="buttons">
-        <img src="images/food.png" alt="食事" onclick="eat()" title="食事で空腹・水分を回復">
-        <img src="images/training.png" alt="トレーニング" onclick="train()" title="体力・トレーニング上昇">
-         <!-- 🔽 リュックボタンをここに移動 -->
         <button id="bag-button" title="所持品を見る">
-        <img src="image/backpack.png" alt="バック" class="bag-icon">
+            <img src="image/backpack.png" alt="バック" class="bag-icon">
         </button>
     </div>
+
+    <div class="buttons lower-buttons">
+        <button onclick="eat()" title="食事で空腹・水分を回復">食事</button>
+        <button onclick="train()" title="体力・トレーニング上昇">トレーニング</button>
+    </div>
+
+
 
     <div style="text-align:center" class="summary">
         <button onclick="nextDay()" style="text-align:center">次の日へ</button>
