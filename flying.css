@@ -140,6 +140,34 @@ body {
   opacity: 0.6;
 }
 
+.day-display {
+    background-color: rgba(128, 0, 128, 0.8); /* 透過率60%（かなり濃い） */
+
+    border: 2px solid #a050f0; /* 明るめ紫の枠線 */
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin: 20px;
+    display: inline-block;
+    box-shadow: 2px 2px 6px rgba(160, 100, 255, 0.5);
+    font-family: 'Segoe UI', sans-serif;
+    animation: glow-purple 3s infinite;
+}
+
+.day-display h2 {
+    color: #d4aaff; /* 明るめの文字色で読みやすく */
+    font-size: 1.8em;
+    margin: 0;
+}
+
+/* 紫に光るアニメーション */
+@keyframes glow-purple {
+    0% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(200, 150, 255, 0.9); }
+    100% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
+}
+
+
+
 .event-log {
     position: fixed;
     top: 10px;
