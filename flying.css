@@ -159,6 +159,20 @@ body {
     margin: 0;
 }
 
+#meal-list {
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  list-style: none;
+  justify-content: center; 
+}
+
+#meal-list li {
+  text-align: center;
+}
+
+
+
 /* 紫に光るアニメーション */
 @keyframes glow-purple {
     0% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }

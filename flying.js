@@ -203,9 +203,15 @@ function toggleLog() {
 
 
 
-function eat() {
-    hunger += 20;
-    thirst += 10;
+function eat(n) {//nでなんの食料か判別
+    switch(n){
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
     if (hunger > 100) hunger = 100;
     if (thirst > 100) thirst = 100;
     updateDisplay();//表示更新
@@ -304,6 +310,18 @@ document.getElementById("bag-button").addEventListener("click", () => {
 function closeBag() {
   document.getElementById("bag-modal").classList.add("hidden");
 }
+
+// 食事モーダル表示
+function openMeal() {
+  // 必要があればここで renderMeals(); を呼び出す
+  document.getElementById("meal-modal").classList.remove("hidden");
+}
+
+// 食事モーダル非表示
+function closeMeal() {
+  document.getElementById("meal-modal").classList.add("hidden");
+}
+
 
 //初期表示更新
 updateDisplay();
