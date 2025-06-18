@@ -9,6 +9,8 @@ let eventype = []; //イベントの種類判別
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
+const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア
+localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
 function updateDisplay() {
@@ -54,7 +56,11 @@ function checkAbnormalStatus() {
 function checkGameOver() {
     checkAbnormalStatus();  //異常状態を記録
     localStorage.setItem("finalDay", day);  //日数を保存
-    if (health <= 0) location.href = "result.html";//結果ページに移行
+
+     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
+
+    if (health <= 0) location.href = "result2.html";//結果ページ(失敗ver)に移行
+    else if(day >= goalDay) location.href = "result1.html";//結果ページ（成功ver）に移行
 }
 
 //体力バーの枠線を制御する関数追加
@@ -234,11 +240,11 @@ function toggleLogSize() {
 
 const items = [
   { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
-  { name: '缶詰', weight: 10, quantity: 0, image: "image/food.png" },
+  { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
   { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
   { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
   { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
-  { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuel.png" },
+  { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
   { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
 ];
 // chooseItem.js から cargo データを取得
