@@ -76,7 +76,6 @@ function updateHealthHighlight() {
   }
 }
 
-
 //次の日に進める処理
 function nextDay() {
     const astronaut = document.getElementById("astronaut");
@@ -136,35 +135,45 @@ function nextDay() {
 //ランダムイベント発生関数
 function triggerRandomEvent(abnormalStatus,day) {
     const rand = Math.random();//ランダムな小数値
+    const bg = document.querySelector('.background'); // 背景要素を取得
+
     if (rand < 0.03||day==2) {
         // 宇宙酔い（3%）または、2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
-    } else if (rand < 0.08) {
-        // 隕石衝突（5%）
-        addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
-        health -= 15;
-        thirst -= 10;
-        hunger -= 10;
-    } else if (rand < 0.23) {
-        // 機器の故障（15%）
-        const type = getRandomInt(1, 4);
-        if (type === 1) {
-            addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
-            stress += 15;
-        } else if (type === 2) {
-            addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
-            health -= 10;
-        } else if (type === 3) {
-            addEvent("🚱 水生成装置が故障！水分確保が困難に。");
-            thirst -= 15;
-        } else {
-            addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
-            stress += 10;
+        if(bg){
+            bg.style.backgroundImage = "url('image/spaceShip_Drunk.png')";
         }
     }else{
-        addEvent("✅ 今日は特に異常なし。");
+        if(bg){
+            bg.style.backgroundImage = "url('image/spaceShip.png')";
+        }
+        if (rand < 0.08) {
+            // 隕石衝突（5%）
+            addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
+            health -= 15;
+            thirst -= 10;
+            hunger -= 10;
+        } else if (rand < 0.23) {
+            // 機器の故障（15%）
+            const type = getRandomInt(1, 4);
+            if (type === 1) {
+                addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
+                stress += 15;
+            } else if (type === 2) {
+                addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
+                health -= 10;
+            } else if (type === 3) {
+                addEvent("🚱 水生成装置が故障！水分確保が困難に。");
+                thirst -= 15;
+            } else {
+                addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
+                stress += 10;
+            }
+        }else{
+            addEvent("✅ 今日は特に異常なし。");
+        }
     }
 
     // ステータスの限界値チェック
