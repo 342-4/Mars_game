@@ -328,13 +328,27 @@ function closeBag() {
 
 // 食事モーダル表示
 function openMeal() {
-  // 必要があればここで renderMeals(); を呼び出す
-  document.getElementById("meal-modal").classList.remove("hidden");
+    document.getElementById("meal-modal").classList.remove("hidden");
+    updateMealQuantities();  // ← これを必ず呼ぶ
 }
+
 
 // 食事モーダル非表示
 function closeMeal() {
   document.getElementById("meal-modal").classList.add("hidden");
+}
+
+//食事モーダルにおける残数管理、表示
+function updateMealQuantities() {
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+
+    const food = cargo.find(item => item.name === '加水食品');
+    const can = cargo.find(item => item.name === '缶詰');
+    const dry = cargo.find(item => item.name === '半乾燥食品');
+
+    document.getElementById("amount-food").textContent = `残り: ${food?.quantity || 0}個`;
+    document.getElementById("amount-can").textContent = `残り: ${can?.quantity || 0}個`;
+    document.getElementById("amount-dry").textContent = `残り: ${dry?.quantity || 0}個`;
 }
 
 
