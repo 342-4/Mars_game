@@ -216,21 +216,53 @@ function toggleLog() {
     }
 }
 
+function eat(n) {
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
 
+    // 食料種類と名前の対応表
+    const foodMap = {
+        1: "加水食品",
+        2: "缶詰",
+        3: "半乾燥食品"
+    };
 
-function eat(n) {//nでなんの食料か判別
+    const itemName = foodMap[n];
+    const item = cargo.find(i => i.name === itemName);
+
+    if (!item || item.quantity <= 0) {
+        alert(`${itemName} がありません`);
+        return;
+    }
+
+    // 数量を減らす
+    item.quantity--;
+    localStorage.setItem('cargo', JSON.stringify(cargo));
+    updateMealQuantities();
+
+    // 空腹・水分を変化させる
     switch(n){
-        case 1:
+        case 1: // 加水食品
+            hunger += 10;
+            thirst += 20;
             break;
-        case 2:
+        case 2: // 缶詰
+            hunger += 20;
+            thirst += 15;
             break;
-        case 3:
+        case 3: // 半乾燥食品
+            hunger += 20;
+            thirst -= 10;
             break;
     }
+
+    // 上限・下限を調整
     if (hunger > 100) hunger = 100;
     if (thirst > 100) thirst = 100;
-    updateDisplay();//表示更新
+    if (thirst < 0) thirst = 0;
+
+    updateDisplay(); // ステータスバー更新
 }
+
 
 //トレーニング処理
 function train() {
