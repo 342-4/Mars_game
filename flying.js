@@ -223,7 +223,8 @@ function eat(n) {
     const foodMap = {
         1: "加水食品",
         2: "缶詰",
-        3: "半乾燥食品"
+        3: "半乾燥食品",
+        4: "水"
     };
 
     const itemName = foodMap[n];
@@ -260,7 +261,20 @@ function eat(n) {
     if (thirst > 100) thirst = 100;
     if (thirst < 0) thirst = 0;
 
-    updateDisplay(); // ステータスバー更新
+    const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
+
+    // savedCargo の内容を items に反映
+    savedCargo.forEach(savedItem => {
+    const match = items.find(item => item.name === savedItem.name);
+    if (match) {
+        match.quantity = savedItem.quantity;
+    }
+    })
+
+    updateDisplay();         // ステータス更新
+    updateMealQuantities(); // 食事モーダル更新
+    renderItems();           // 所持品モーダル更新
+
 }
 
 
@@ -377,10 +391,12 @@ function updateMealQuantities() {
     const food = cargo.find(item => item.name === '加水食品');
     const can = cargo.find(item => item.name === '缶詰');
     const dry = cargo.find(item => item.name === '半乾燥食品');
+    const water = cargo.find(item => item.name === '水');
 
     document.getElementById("amount-food").textContent = `残り: ${food?.quantity || 0}個`;
     document.getElementById("amount-can").textContent = `残り: ${can?.quantity || 0}個`;
     document.getElementById("amount-dry").textContent = `残り: ${dry?.quantity || 0}個`;
+    document.getElementById("amount-water").textContent = `残り: ${water?.quantity || 0}個`;
 }
 
 
