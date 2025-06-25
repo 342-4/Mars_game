@@ -9,7 +9,7 @@ let eventype = []; //イベントの種類判別
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(8, 12); // 28〜32日目のどこかでクリア
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
