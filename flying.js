@@ -76,7 +76,6 @@ function updateHealthHighlight() {
   }
 }
 
-
 //次の日に進める処理
 function nextDay() {
     const astronaut = document.getElementById("astronaut");
@@ -136,35 +135,45 @@ function nextDay() {
 //ランダムイベント発生関数
 function triggerRandomEvent(abnormalStatus,day) {
     const rand = Math.random();//ランダムな小数値
+    const bg = document.querySelector('.background'); // 背景要素を取得
+
     if (rand < 0.03||day==2) {
         // 宇宙酔い（3%）または、2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
-    } else if (rand < 0.08) {
-        // 隕石衝突（5%）
-        addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
-        health -= 15;
-        thirst -= 10;
-        hunger -= 10;
-    } else if (rand < 0.23) {
-        // 機器の故障（15%）
-        const type = getRandomInt(1, 4);
-        if (type === 1) {
-            addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
-            stress += 15;
-        } else if (type === 2) {
-            addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
-            health -= 10;
-        } else if (type === 3) {
-            addEvent("🚱 水生成装置が故障！水分確保が困難に。");
-            thirst -= 15;
-        } else {
-            addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
-            stress += 10;
+        if(bg){
+            bg.style.backgroundImage = "url('image/spaceShip_Drunk.png')";
         }
     }else{
-        addEvent("✅ 今日は特に異常なし。");
+        if(bg){
+            bg.style.backgroundImage = "url('image/spaceShip.png')";
+        }
+        if (rand < 0.08) {
+            // 隕石衝突（5%）
+            addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
+            health -= 15;
+            thirst -= 10;
+            hunger -= 10;
+        } else if (rand < 0.23) {
+            // 機器の故障（15%）
+            const type = getRandomInt(1, 4);
+            if (type === 1) {
+                addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
+                stress += 15;
+            } else if (type === 2) {
+                addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
+                health -= 10;
+            } else if (type === 3) {
+                addEvent("🚱 水生成装置が故障！水分確保が困難に。");
+                thirst -= 15;
+            } else {
+                addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
+                stress += 10;
+            }
+        }else{
+            addEvent("✅ 今日は特に異常なし。");
+        }
     }
 
     // ステータスの限界値チェック
@@ -207,15 +216,53 @@ function toggleLog() {
     }
 }
 
+function eat(n) {
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
 
+    // 食料種類と名前の対応表
+    const foodMap = {
+        1: "加水食品",
+        2: "缶詰",
+        3: "半乾燥食品"
+    };
 
-function eat() {
-    hunger += 20;
-    thirst += 10;
+    const itemName = foodMap[n];
+    const item = cargo.find(i => i.name === itemName);
+
+    if (!item || item.quantity <= 0) {
+        alert(`${itemName} がありません`);
+        return;
+    }
+
+    // 数量を減らす
+    item.quantity--;
+    localStorage.setItem('cargo', JSON.stringify(cargo));
+    updateMealQuantities();
+
+    // 空腹・水分を変化させる
+    switch(n){
+        case 1: // 加水食品
+            hunger += 10;
+            thirst += 20;
+            break;
+        case 2: // 缶詰
+            hunger += 20;
+            thirst += 15;
+            break;
+        case 3: // 半乾燥食品
+            hunger += 20;
+            thirst -= 10;
+            break;
+    }
+
+    // 上限・下限を調整
     if (hunger > 100) hunger = 100;
     if (thirst > 100) thirst = 100;
-    updateDisplay();//表示更新
+    if (thirst < 0) thirst = 0;
+
+    updateDisplay(); // ステータスバー更新
 }
+
 
 //トレーニング処理
 function train() {
@@ -310,6 +357,32 @@ document.getElementById("bag-button").addEventListener("click", () => {
 function closeBag() {
   document.getElementById("bag-modal").classList.add("hidden");
 }
+
+// 食事モーダル表示
+function openMeal() {
+    document.getElementById("meal-modal").classList.remove("hidden");
+    updateMealQuantities();  // ← これを必ず呼ぶ
+}
+
+
+// 食事モーダル非表示
+function closeMeal() {
+  document.getElementById("meal-modal").classList.add("hidden");
+}
+
+//食事モーダルにおける残数管理、表示
+function updateMealQuantities() {
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+
+    const food = cargo.find(item => item.name === '加水食品');
+    const can = cargo.find(item => item.name === '缶詰');
+    const dry = cargo.find(item => item.name === '半乾燥食品');
+
+    document.getElementById("amount-food").textContent = `残り: ${food?.quantity || 0}個`;
+    document.getElementById("amount-can").textContent = `残り: ${can?.quantity || 0}個`;
+    document.getElementById("amount-dry").textContent = `残り: ${dry?.quantity || 0}個`;
+}
+
 
 //初期表示更新
 updateDisplay();

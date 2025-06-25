@@ -9,7 +9,9 @@
 </head>
 
 <body class = "background">
-    <h2>📅 日数: <span id="day">1</span> 日目</h2>
+    <div class="day-display">
+        <h2>日数: <span id="day">1</span> 日目</h2>
+    </div>
     <img id="astronaut" src="image/man.png" alt="宇宙飛行士">
 
     <div class="status-container">
@@ -49,7 +51,7 @@
     </div>
 
     <div class="buttons lower-buttons">
-        <button onclick="eat()" title="食事で空腹・水分を回復">食事</button>
+        <button onclick="openMeal()" title="食事で空腹・水分を回復">食事</button>
         <button onclick="train()" title="体力・トレーニング上昇">トレーニング</button>
     </div>
 
@@ -82,6 +84,35 @@
     <button onclick="closeBag()">閉じる</button>
   </div>
 </div>
+
+<!--  食事モーダル -->
+<div id="meal-modal" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <h2>残り食料</h2>
+    <ul id="meal-list">
+        <li>
+            <img src="image/food.png" alt="加水食品" class="bag-icon" onclick="eat(1)">
+            <div>加水食品</div>
+            <div id="amount-food">残り: 0個</div>
+        </li>
+        <li>
+            <img src="image/food.png" alt="缶詰" class="bag-icon" onclick="eat(2)">
+            <div>缶詰</div>
+            <div id="amount-can">残り: 0個</div>
+        </li>
+        <li>
+            <img src="image/food.png" alt="半乾燥食品" class="bag-icon" onclick="eat(3)">
+            <div>半乾燥食品</div>
+            <div id="amount-dry">残り: 0個</div>
+        </li>
+    </ul>
+
+
+    <button onclick="closeMeal()">閉じる</button>
+  </div>
+</div>
+
 
     <script src="flying.js"></script>
     <div id="screen-fade"></div>
