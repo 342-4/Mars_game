@@ -315,7 +315,11 @@ body {
   width: 90%;
   z-index: 999;
   text-align: center;
+
+  max-height: 80vh;         /* 画面の80%以内の高さに制限 */
+  overflow-y: auto;         /* 内容が多いとき縦スクロール */
 }
+
 #item-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
