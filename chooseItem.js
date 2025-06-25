@@ -66,7 +66,7 @@ function startMission() {
     const summary = items.map(item => `${item.name}×${item.quantity}`).join(', ');
     alert("出発準備完了！\n選んだ物資:\n" + summary + `\n合計重量: ${currentWeight}kg`);
 
-    // 例：次の画面にデータを渡したい場合
+    //：次の画面にデータを渡したい場合
     localStorage.setItem('cargo', JSON.stringify(items));
     document.querySelectorAll('h1,p,#item-list, .summary').forEach(el => {
         el.style.display = "none";
@@ -82,5 +82,5 @@ function startMission() {
         }
     }, 30);
 }
-//テスト
+//
 renderItems();
