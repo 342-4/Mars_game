@@ -243,16 +243,16 @@ function eat(n) {
     switch(n){
         case 1: // 加水食品
             hunger += 10;
-            thirst += 20;
             break;
         case 2: // 缶詰
             hunger += 20;
-            thirst += 15;
             break;
         case 3: // 半乾燥食品
-            hunger += 20;
-            thirst -= 10;
+            hunger += 15;
+            stress += 5;
             break;
+        case 4: //水
+            thirst += 10;
     }
 
     // 上限・下限を調整
