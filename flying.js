@@ -6,6 +6,14 @@ let thirst = 100;//水分量
 let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
+let malfunctions = {
+  comms: false,
+  oxygen: false,
+  waterGen: false,
+  waste: false,
+  hullDamaged: false
+};
+
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
@@ -78,6 +86,32 @@ function updateHealthHighlight() {
 
 //次の日に進める処理
 function nextDay() {
+    // 機器故障の影響を反映（毎日ダメージ）
+    if (malfunctions.hullDamaged) {
+    health -= 40;
+    hunger -= 5;
+    thirst -= 5;
+    addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+    }
+
+    if (malfunctions.comms) {
+    stress += 5;
+    addEvent("📡 通信機器の故障が続いています。");
+    }
+    if (malfunctions.oxygen) {
+    health -= 5;
+    addEvent("🔧 酸素供給装置の故障が続いています。");
+    }
+    if (malfunctions.waterGen) {
+    thirst -= 5;
+    addEvent("🚱 水生成装置の故障が続いています。");
+    }
+    if (malfunctions.waste) {
+    stress += 5;
+    addEvent("💩 汚水タンクの故障が続いています。");
+    }
+
+
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
 
@@ -149,27 +183,32 @@ function triggerRandomEvent(abnormalStatus,day) {
         if(bg){
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.08) {
+        if (rand < 0.8) {
             // 隕石衝突（5%）
             addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
             thirst -= 10;
             hunger -= 10;
-        } else if (rand < 0.23) {
+            malfunctions.hullDamaged = true;
+        } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4);
             if (type === 1) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
+                malfunctions.comms = true;
             } else if (type === 2) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
+                malfunctions.oxygen = true;
             } else if (type === 3) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
+                malfunctions.waterGen = true;
             } else {
                 addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
                 stress += 10;
+                malfunctions.waste = true;
             }
         }else{
             addEvent("✅ 今日は特に異常なし。");
