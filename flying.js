@@ -155,6 +155,9 @@ function triggerRandomEvent(abnormalStatus,day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            if(bg){
+                bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
+            }
         } else if (rand < 0.23) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4);
