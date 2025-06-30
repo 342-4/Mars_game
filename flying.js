@@ -14,6 +14,14 @@ let malfunctions = {
   hullDamaged: false
 };
 
+let malfunctionsDay = {
+  comms: false,
+  oxygen: false,
+  waterGen: false,
+  waste: false,
+  hullDamaged: false
+};
+
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
@@ -86,32 +94,6 @@ function updateHealthHighlight() {
 
 //次の日に進める処理
 function nextDay() {
-    // 機器故障の影響を反映（毎日ダメージ）
-    if (malfunctions.hullDamaged) {
-    health -= 15;
-    hunger -= 10;
-    thirst -= 10;
-    addEvent("☄️ 船体損傷が続いています。修理が必要です！");
-    }
-
-    if (malfunctions.comms) {
-    stress += 15;
-    addEvent("📡 通信機器の故障が続いています。");
-    }
-    if (malfunctions.oxygen) {
-    health -= 10;
-    addEvent("🔧 酸素供給装置の故障が続いています。");
-    }
-    if (malfunctions.waterGen) {
-    thirst -= 15;
-    addEvent("🚱 水生成装置の故障が続いています。");
-    }
-    if (malfunctions.waste) {
-    stress += 10;
-    addEvent("💩 汚水タンクの故障が続いています。");
-    }
-
-
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
 
@@ -125,6 +107,29 @@ function nextDay() {
         // アニメーション終了後にステータス処理を実行
         setTimeout(() => {
             day++; // 日付を進める
+
+             if (malfunctions.hullDamaged && malfunctionsDay.hullDamaged) {
+                health -= 15;
+                hunger -= 10;
+                thirst -= 10;
+                addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+            }
+            if (malfunctions.comms && malfunctionsDay.comms) {
+                stress += 15;
+                addEvent("📡 通信機器の故障が続いています。");
+            }
+            if (malfunctions.oxygen && malfunctionsDay.oxygen) {
+                health -= 10;
+                addEvent("🔧 酸素供給装置の故障が続いています。");
+            }
+            if (malfunctions.waterGen && malfunctionsDay.waterGen) {
+                thirst -= 15;
+                addEvent("🚱 水生成装置の故障が続いています。");
+            }
+            if (malfunctions.waste && malfunctionsDay.waste) {
+                stress += 10;
+                addEvent("💩 汚水タンクの故障が続いています。");
+            }
 
             checkAbnormalStatus(); // 異常状態の確認
             const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
@@ -159,6 +164,8 @@ function nextDay() {
             setTimeout(() => {
                 fade.classList.remove("active");
                 checkGameOver();
+                
+                malfunctionsDay = { ...malfunctions };
             }, 1000);
 
         }, 500); // 1秒後にステータス処理
