@@ -53,9 +53,21 @@
     <div class="buttons lower-buttons">
         <button onclick="openMeal()" title="食事で空腹・水分を回復">食事</button>
         <button onclick="train()" title="体力・トレーニング上昇">トレーニング</button>
+        <button onclick="openRepairModal()" title="損傷個所を修理">修理</button>
     </div>
-
-
+ <!-- 修理モーダル -->
+<div id="repair-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>修理メニュー</h2>
+    <div class="repair-options">
+      <button onclick="repairSystem('hullDamaged')">☄️ 船体を修理</button>
+      <button onclick="repairSystem('comms')">📡 通信機を修理</button>
+      <button onclick="repairSystem('waste')">💩 汚水タンクを修理</button>
+      <button onclick="repairSystem('waterGen')">🚱 水生成装置を修理</button>
+    </div>
+    <button onclick="closeRepairModal()">閉じる</button>
+  </div>
+</div>
 
     <div style="text-align:center" class="summary">
         <button onclick="nextDay()" style="text-align:center">次の日へ</button>
@@ -87,7 +99,6 @@
 
 <!--  食事モーダル -->
 <div id="meal-modal" class="modal hidden">
-  <div class="modal-overlay"></div>
   <div class="modal-content">
     <h2>残り食料</h2>
     <ul id="meal-list">

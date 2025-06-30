@@ -88,26 +88,26 @@ function updateHealthHighlight() {
 function nextDay() {
     // 機器故障の影響を反映（毎日ダメージ）
     if (malfunctions.hullDamaged) {
-    health -= 40;
-    hunger -= 5;
-    thirst -= 5;
+    health -= 15;
+    hunger -= 10;
+    thirst -= 10;
     addEvent("☄️ 船体損傷が続いています。修理が必要です！");
     }
 
     if (malfunctions.comms) {
-    stress += 5;
+    stress += 15;
     addEvent("📡 通信機器の故障が続いています。");
     }
     if (malfunctions.oxygen) {
-    health -= 5;
+    health -= 10;
     addEvent("🔧 酸素供給装置の故障が続いています。");
     }
     if (malfunctions.waterGen) {
-    thirst -= 5;
+    thirst -= 15;
     addEvent("🚱 水生成装置の故障が続いています。");
     }
     if (malfunctions.waste) {
-    stress += 5;
+    stress += 10;
     addEvent("💩 汚水タンクの故障が続いています。");
     }
 
@@ -214,6 +214,47 @@ function triggerRandomEvent(abnormalStatus,day) {
             addEvent("✅ 今日は特に異常なし。");
         }
     }
+
+function repairSystem(part) {
+  const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+  const kit = cargo.find(i => i.name === '修理キット');
+
+  if (!kit || kit.quantity <= 0) {
+    alert("修理キットがありません！");
+    return;
+  }
+
+  if (!malfunctions[part]) {
+    alert("この部分は故障していません！");
+    return;
+  }
+
+  // 修理実行
+  kit.quantity--;
+  localStorage.setItem('cargo', JSON.stringify(cargo));
+  malfunctions[part] = false;
+
+  let message = "";
+  switch (part) {
+    case "hullDamaged":
+      message = "☄️ 船体を修理しました。";
+      break;
+    case "comms":
+      message = "📡 通信機を修理しました。";
+      break;
+    case "waste":
+      message = "💩 汚水タンクを修理しました。";
+      break;
+    case "waterGen":
+      message = "🚱 水生成装置を修理しました。";
+      break;
+  }
+
+  addEvent(message);
+  updateDisplay();
+}
+
+    
 
     // ステータスの限界値チェック
     if (health < 0) health = 0;
@@ -437,6 +478,14 @@ function updateMealQuantities() {
     document.getElementById("amount-dry").textContent = `残り: ${dry?.quantity || 0}個`;
     document.getElementById("amount-water").textContent = `残り: ${water?.quantity || 0}個`;
 }
+//修理ボタンの開け閉め
+function openRepairModal() {
+  document.getElementById("repair-modal").classList.remove("hidden");
+}
+function closeRepairModal() {
+  document.getElementById("repair-modal").classList.add("hidden");
+}
+
 
 
 //初期表示更新
