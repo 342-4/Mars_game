@@ -339,3 +339,41 @@ body {
   display: block;
   margin: 0 auto 10px auto;
 }
+/* 修理モーダル */
+#repair-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+#repair-modal.hidden {
+  display: none;
+}
+#repair-modal .modal-content {
+  background-color: #111;
+  color: #eee;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+.repair-options button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.repair-options button:hover {
+  background-color: #666;
+}
+

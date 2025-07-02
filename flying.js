@@ -6,6 +6,22 @@ let thirst = 100;//水分量
 let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
+let malfunctions = {
+  comms: false,
+  oxygen: false,
+  waterGen: false,
+  waste: false,
+  hullDamaged: false
+};
+
+let malfunctionsDay = {
+  comms: false,
+  oxygen: false,
+  waterGen: false,
+  waste: false,
+  hullDamaged: false
+};
+
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
@@ -92,6 +108,29 @@ function nextDay() {
         setTimeout(() => {
             day++; // 日付を進める
 
+             if (malfunctions.hullDamaged && malfunctionsDay.hullDamaged) {
+                health -= 15;
+                hunger -= 10;
+                thirst -= 10;
+                addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+            }
+            if (malfunctions.comms && malfunctionsDay.comms) {
+                stress += 15;
+                addEvent("📡 通信機器の故障が続いています。");
+            }
+            if (malfunctions.oxygen && malfunctionsDay.oxygen) {
+                health -= 10;
+                addEvent("🔧 酸素供給装置の故障が続いています。");
+            }
+            if (malfunctions.waterGen && malfunctionsDay.waterGen) {
+                thirst -= 15;
+                addEvent("🚱 水生成装置の故障が続いています。");
+            }
+            if (malfunctions.waste && malfunctionsDay.waste) {
+                stress += 10;
+                addEvent("💩 汚水タンクの故障が続いています。");
+            }
+
             checkAbnormalStatus(); // 異常状態の確認
             const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
             const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
@@ -125,6 +164,8 @@ function nextDay() {
             setTimeout(() => {
                 fade.classList.remove("active");
                 checkGameOver();
+                
+                malfunctionsDay = { ...malfunctions };
             }, 1000);
 
         }, 500); // 1秒後にステータス処理
@@ -149,7 +190,7 @@ function triggerRandomEvent(abnormalStatus,day) {
         if(bg){
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.08) {
+        if (rand < 0.8) {
             // 隕石衝突（5%）
             addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
@@ -159,25 +200,72 @@ function triggerRandomEvent(abnormalStatus,day) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
         } else if (rand < 0.23) {
+            malfunctions.hullDamaged = true;
+        } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4);
             if (type === 1) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
+                malfunctions.comms = true;
             } else if (type === 2) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
+                malfunctions.oxygen = true;
             } else if (type === 3) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
+                malfunctions.waterGen = true;
             } else {
                 addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
                 stress += 10;
+                malfunctions.waste = true;
             }
         }else{
             addEvent("✅ 今日は特に異常なし。");
         }
     }
+
+function repairSystem(part) {
+  const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+  const kit = cargo.find(i => i.name === '修理キット');
+
+  if (!kit || kit.quantity <= 0) {
+    alert("修理キットがありません！");
+    return;
+  }
+
+  if (!malfunctions[part]) {
+    alert("この部分は故障していません！");
+    return;
+  }
+
+  // 修理実行
+  kit.quantity--;
+  localStorage.setItem('cargo', JSON.stringify(cargo));
+  malfunctions[part] = false;
+
+  let message = "";
+  switch (part) {
+    case "hullDamaged":
+      message = "☄️ 船体を修理しました。";
+      break;
+    case "comms":
+      message = "📡 通信機を修理しました。";
+      break;
+    case "waste":
+      message = "💩 汚水タンクを修理しました。";
+      break;
+    case "waterGen":
+      message = "🚱 水生成装置を修理しました。";
+      break;
+  }
+
+  addEvent(message);
+  updateDisplay();
+}
+
+    
 
     // ステータスの限界値チェック
     if (health < 0) health = 0;
@@ -401,6 +489,14 @@ function updateMealQuantities() {
     document.getElementById("amount-dry").textContent = `残り: ${dry?.quantity || 0}個`;
     document.getElementById("amount-water").textContent = `残り: ${water?.quantity || 0}個`;
 }
+//修理ボタンの開け閉め
+function openRepairModal() {
+  document.getElementById("repair-modal").classList.remove("hidden");
+}
+function closeRepairModal() {
+  document.getElementById("repair-modal").classList.add("hidden");
+}
+
 
 
 //初期表示更新

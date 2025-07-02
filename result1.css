@@ -14,7 +14,7 @@ body {
     padding: 40px;
 }
 body.arrived.background {
-    background-image: url(image/arrive.png);
+    background-image: url(image/arrive1.png);
     background-position: center top;
 }
 
