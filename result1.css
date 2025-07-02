@@ -1,6 +1,6 @@
 
 .background{
-    background-image: url(image/launching.png);
+    background-image: url(image/landing.png);
     background-repeat: no-repeat;/* 背景画像を繰り返し表示させない */
     background-size: 100%;/* 背景画像を全画面表示 */
     background-position: center -1024px;
