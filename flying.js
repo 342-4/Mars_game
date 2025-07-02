@@ -10,7 +10,7 @@ let malfunctions = {
   comms: false,
   oxygen: false,
   waterGen: false,
-  waste: false,
+  fuel: false,
   hullDamaged: false
 };
 
@@ -18,14 +18,14 @@ let malfunctionsDay = {
   comms: false,
   oxygen: false,
   waterGen: false,
-  waste: false,
+  fuel: false,
   hullDamaged: false
 };
 
 
 const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(8, 12); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(4, 5); // 28〜32日目のどこかでクリア
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
@@ -126,9 +126,9 @@ function nextDay() {
                 thirst -= 15;
                 addEvent("🚱 水生成装置の故障が続いています。");
             }
-            if (malfunctions.waste && malfunctionsDay.waste) {
+            if (malfunctions.fuel && malfunctionsDay.fuel) {
                 stress += 10;
-                addEvent("💩 汚水タンクの故障が続いています。");
+                addEvent("⛽️ 燃料タンクの故障が続いています。");
             }
 
             checkAbnormalStatus(); // 異常状態の確認
@@ -190,7 +190,7 @@ function triggerRandomEvent(abnormalStatus,day) {
         if(bg){
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.8) {
+        if (rand < 0.05) {
             // 隕石衝突（5%）
             addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
@@ -213,9 +213,9 @@ function triggerRandomEvent(abnormalStatus,day) {
                 thirst -= 15;
                 malfunctions.waterGen = true;
             } else {
-                addEvent("💩 汚水タンク故障！衛生状態が悪化しストレスが増大。");
+                addEvent("⛽️ 燃料タンク故障！このままだと火星にたどり着けるかわからない、、");
                 stress += 10;
-                malfunctions.waste = true;
+                malfunctions.fuel = true;
             }
         }else{
             addEvent("✅ 今日は特に異常なし。");
@@ -240,6 +240,7 @@ function repairSystem(part) {
   kit.quantity--;
   localStorage.setItem('cargo', JSON.stringify(cargo));
   malfunctions[part] = false;
+  malfunctionsDay[part] = false; 
 
   let message = "";
   switch (part) {
@@ -249,8 +250,11 @@ function repairSystem(part) {
     case "comms":
       message = "📡 通信機を修理しました。";
       break;
-    case "waste":
-      message = "💩 汚水タンクを修理しました。";
+    case "oxygen":
+      message = "🔧 酸素供給装置を修理しました。";
+      break;
+    case "fuel":
+      message = "⛽️ 燃料タンクを修理しました。";
       break;
     case "waterGen":
       message = "🚱 水生成装置を修理しました。";

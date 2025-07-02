@@ -56,18 +56,109 @@
         <button onclick="openRepairModal()" title="損傷個所を修理">修理</button>
     </div>
  <!-- 修理モーダル -->
+<!-- 修理モーダル -->
 <div id="repair-modal" class="modal hidden">
   <div class="modal-content">
     <h2>修理メニュー</h2>
-    <div class="repair-options">
-      <button onclick="repairSystem('hullDamaged')">☄️ 船体を修理</button>
-      <button onclick="repairSystem('comms')">📡 通信機を修理</button>
-      <button onclick="repairSystem('waste')">💩 汚水タンクを修理</button>
-      <button onclick="repairSystem('waterGen')">🚱 水生成装置を修理</button>
-    </div>
+    <ul id="repair-options">
+      <li onclick="promptRepair('hullDamaged')">
+        <img src="image/repairKit.png" alt="船体修理" class="bag-icon">
+        <div>船体</div>
+      </li>
+      <li onclick="promptRepair('comms')">
+        <img src="image/repairKit.png" alt="通信機修理" class="bag-icon">
+        <div>通信機</div>
+      </li>
+            <li onclick="promptRepair('waterGen')">
+        <img src="image/repairKit.png" alt="水生成装置修理" class="bag-icon">
+        <div>水生成装置</div>
+      </li>
+      <li onclick="promptRepair('fuel')">
+        <img src="image/fuelcan.png" alt="燃料タンク修理" class="bag-icon">
+        <div> 燃料タンク</div>
+      </li>
+      <li onclick="promptRepair('oxygen')">
+        <img src="image/oxygenCylinder.png" alt="酸素装置修理" class="bag-icon">
+        <div>酸素生成装置</div>
+      </li>
+    </ul>
     <button onclick="closeRepairModal()">閉じる</button>
   </div>
 </div>
+
+<!-- 修理確認ダイアログ -->
+<div id="repair-confirm" class="modal hidden">
+  <div class="modal-content">
+    <p id="repair-message">この部分を修理しますか？</p>
+    <button onclick="confirmRepair(true)">使用する</button>
+    <button onclick="confirmRepair(false)">キャンセル</button>
+  </div>
+</div>
+
+
+<script>
+
+
+  let selectedRepairPart = null;
+
+  // 修理メッセージをカスタマイズ
+  function getRepairMessage(part) {
+    switch (part) {
+      case "fuel": return "燃料缶を使いますか？";
+      case "oxygen": return "酸素ボンベを使いますか？";
+      default: return "修理キットを使いますか？";
+    }
+  }
+
+  function getRepairLabel(part) {
+    const labels = {
+      hullDamaged: "☄️ 船体",
+      comms: "📡 通信機",
+      oxygen: "🔧 酸素供給装置",
+      waterGen: "🚱 水生成装置",
+      fuel: "⛽️ 燃料タンク"
+    };
+    return labels[part] || part;
+  }
+
+  function promptRepair(part) {
+    selectedRepairPart = part;
+    document.getElementById("repair-message").textContent = getRepairLabel(part) + " - " + getRepairMessage(part);
+    document.getElementById("repair-confirm").classList.remove("hidden");
+  }
+
+  function confirmRepair(doRepair) {
+    document.getElementById("repair-confirm").classList.add("hidden");
+    if (!doRepair || !selectedRepairPart) return;
+
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+
+    let toolName = "修理キット";
+    if (selectedRepairPart === "fuel") toolName = "燃料缶";
+    if (selectedRepairPart === "oxygen") toolName = "酸素ボンベ";
+
+    const tool = cargo.find(i => i.name === toolName);
+
+    if (!tool || tool.quantity <= 0) {
+      alert(`${toolName} がありません！`);
+      return;
+    }
+
+    if (!malfunctions[selectedRepairPart]) {
+      alert("この部分は故障していません！");
+      return;
+    }
+
+    tool.quantity--;
+    localStorage.setItem('cargo', JSON.stringify(cargo));
+    malfunctions[selectedRepairPart] = false;
+    malfunctionsDay[selectedRepairPart] = false;
+    addEvent(getRepairLabel(selectedRepairPart) + " を修理しました。");
+    updateDisplay();
+  }
+</script>
+
+
 
     <div style="text-align:center" class="summary">
         <button onclick="nextDay()" style="text-align:center">次の日へ</button>
