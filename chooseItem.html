@@ -11,14 +11,40 @@
   <h1 style="text-align:center">🚀 積載物資を選ぼう</h1>
   <p style="text-align:center">積載上限: <strong id="weight-limit">100</strong> kg</p>
   <p style="text-align:center">現在の合計重量: <strong id="current-weight">0</strong> kg</p>
-  
+
   <div id="item-list"></div>
-  
+
   <div style="text-align:center" class="summary">
     <button onclick="startMission()" style="text-align:center">この内容で出発！</button>
   </div>
   <script src="chooseItem.js"></script>
-  
+
+  <audio id="gameBGM" src="image/Galaxy_Runner.mp3" loop></audio>
+
+  <script>
+    const gameBGM = document.getElementById('gameBGM');
+
+    const storedTime = localStorage.getItem('bgmCurrentTime');
+    if (storedTime) {
+      gameBGM.currentTime = parseFloat(storedTime);
+    }
+
+    gameBGM.play()
+      .then(() => {
+        // BGM再生成功
+      })
+      .catch(error => {
+        console.error('BGM再生エラー:', error);
+        document.body.addEventListener('click', function userInteractionPlay() {
+          gameBGM.play()
+            .then(() => {
+              document.body.removeEventListener('click', userInteractionPlay);
+            })
+            .catch(err => console.error('ユーザー操作後のBGM再生エラー:', err));
+        }, { once: true });
+      });
+  </script>
+
 </body>
 
 </html>

@@ -10,8 +10,24 @@
 <body class="background">
     <div class="content">
         <h1 class="main-title">MARSに行きまーす</h1>
-        <button onclick="location.href='chooseItem.html'">スタート</button>
+        <audio id="titleBGM" src="image/Galaxy_Runner.mp3" loop></audio> 
+        <button id="startButton">スタート</button>
     </div>
-</body>
 
+    <script>
+        const titleBGM = document.getElementById('titleBGM');
+        const startButton = document.getElementById('startButton');
+
+        startButton.addEventListener('click', () => {
+            titleBGM.play()
+                .then(() => {
+                    location.href = 'chooseItem.html';
+                })
+                .catch(error => {
+                    console.error('BGM再生エラー:', error);
+                    location.href = 'chooseItem.html';
+                });
+        });
+    </script>
+</body>
 </html>
