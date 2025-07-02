@@ -196,6 +196,10 @@ function triggerRandomEvent(abnormalStatus,day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            if(bg){
+                bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
+            }
+        } else if (rand < 0.23) {
             malfunctions.hullDamaged = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
