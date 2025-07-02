@@ -13,6 +13,15 @@ let malfunctions = {
   waste: false,
   hullDamaged: false
 };
+const maxFuel = 100;
+const maxOxygen = 100;
+
+// 現在の燃料と酸素も100スタート（変化させる場合は変数で管理）
+let currentFuel = 100;
+let currentOxygen = 100;
+
+
+
 
 let malfunctionsDay = {
   comms: false,
@@ -158,6 +167,8 @@ function nextDay() {
 
             triggerRandomEvent(abnormalStatus, day); // イベント発生
             updateDisplay(); // 画面表示更新
+            updateResourceBars();
+
 
             astronaut.classList.remove("walking"); // 歩行停止
 
@@ -409,6 +420,21 @@ savedCargo.forEach(savedItem => {
     match.quantity = savedItem.quantity;
   }
 });
+
+function updateResourceBars() {
+  // バーは100%に固定（もしバーも100%にしたい場合）
+  document.getElementById("fuel-bar").style.width = `100%`;
+  document.getElementById("oxygen-bar").style.width = `100%`;
+
+  // 数値は100と表示
+  document.getElementById("fuel").textContent = 100;
+  document.getElementById("oxygen").textContent = 100;
+}
+
+
+
+
+
 
 
 const itemList = document.getElementById("item-list");
