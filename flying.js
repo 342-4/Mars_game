@@ -32,11 +32,9 @@ let malfunctionsDay = {
 };
 
 
-const baseweightLimit = 100;//最大積載量
-const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
-const weightLimit = baseWeightLimit + deathCount * 10;
+const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(4, 5); // 28〜32日目のどこかでクリア
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
@@ -81,25 +79,14 @@ function checkAbnormalStatus() {
 
 //ゲームオーバー判定
 function checkGameOver() {
-    checkAbnormalStatus();
-    localStorage.setItem("finalDay", day);
+    checkAbnormalStatus();  //異常状態を記録
+    localStorage.setItem("finalDay", day);  //日数を保存
 
-    const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
+     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
 
-    if (health <= 0 || day >= goalDay) {
-        // ゲームオーバー回数を取得・更新
-        let deathCount = parseInt(localStorage.getItem("deathCount") || "0");
-        deathCount++;
-        localStorage.setItem("deathCount", deathCount);
-
-        if (health <= 0) {
-            location.href = "result2.html";//失敗
-        } else {
-            location.href = "result1.html";//成功
-        }
-    }
+    if (health <= 0) location.href = "result2.html";//結果ページ(失敗ver)に移行
+    else if(day >= goalDay) location.href = "result1.html";//結果ページ（成功ver）に移行
 }
-
 
 //体力バーの枠線を制御する関数追加
 function updateHealthHighlight() {
