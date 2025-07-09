@@ -129,7 +129,17 @@ function nextDay() {
         setTimeout(() => {
             day++; // 日付を進める
 
-             if (malfunctions.hullDamaged && malfunctionsDay.hullDamaged) {
+            // 故障中は燃料・酸素を20ずつ減らす
+            if (malfunctions.fuel && malfunctionsDay.fuel) {
+                currentFuel -= 20;
+                if (currentFuel < 0) currentFuel = 0;
+            }
+            if (malfunctions.oxygen && malfunctionsDay.oxygen) {
+                currentOxygen -= 20;
+                if (currentOxygen < 0) currentOxygen = 0;
+            }
+
+            if (malfunctions.hullDamaged && malfunctionsDay.hullDamaged) {
                 health -= 15;
                 hunger -= 10;
                 thirst -= 10;
@@ -226,7 +236,7 @@ function triggerRandomEvent(abnormalStatus,day) {
             malfunctions.hullDamaged = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
-            const type = getRandomInt(1, 4);
+            const type = getRandomInt(4, 4);
             if (type === 1) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
@@ -438,20 +448,12 @@ savedCargo.forEach(savedItem => {
 });
 
 function updateResourceBars() {
-  // バーは100%に固定（もしバーも100%にしたい場合）
-  document.getElementById("fuel-bar").style.width = `100%`;
-  document.getElementById("oxygen-bar").style.width = `100%`;
-
-  // 数値は100と表示
-  document.getElementById("fuel").textContent = 100;
-  document.getElementById("oxygen").textContent = 100;
+  // currentFuel, currentOxygenに合わせてバーと数値を更新
+  document.getElementById("fuel-bar").style.width = `${currentFuel}%`;
+  document.getElementById("oxygen-bar").style.width = `${currentOxygen}%`;
+  document.getElementById("fuel").textContent = currentFuel;
+  document.getElementById("oxygen").textContent = currentOxygen;
 }
-
-
-
-
-
-
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
@@ -462,7 +464,6 @@ function toggleLogSize() {
     const logSection = document.getElementById("event-log");//イベントログの枠所得
     logSection.classList.toggle("collapsed");//縮小表示と通常表示の切り替え
 }
-
 
 // 所持品の描画
 function renderItems() {
