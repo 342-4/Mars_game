@@ -1,24 +1,43 @@
+/* result2.css */
+
 .background {
     background-image: url(image/starvation.png);
     background-repeat: no-repeat;
-    /* 背景画像を繰り返し表示させない */
-    background-size: 100%;
-    /* 背景画像を全画面表示 */
-    background-position: center top;
+    background-size: 100%; /* 画像のサイズは現状維持 */
+    background-position: center top; /* 画像の位置も現状維持 */
 }
 
 body {
     font-family: "Segoe UI", sans-serif;
     background-color: #1e1e2f;
-    color: white;
+    color: orange; /* ここをオレンジに変更しました */
     text-align: center;
-    padding: 40px;
+    /* paddingは後述のFlexboxとposition: absolute;で調整するため削除または小さくします */
+    margin: 0; /* bodyのデフォルトマージンを削除 */
+    min-height: 100vh; /* bodyの高さをビューポートの高さ全体に設定 */
+    position: relative; /* 子要素のabsolute配置の基準にするため */
 }
 
 .main-title {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    color: orange; /* ここをオレンジに変更しました */
 }
+
+#day-result,
+#status-result {
+    color: orange; /* ここをオレンジに変更しました */
+}
+
+.content-wrapper {
+    position: absolute; /* 親要素を基準に絶対配置 */
+    bottom: 20px; /* 下から20pxの位置 */
+    right: 600px; /* 右から20pxの位置 */
+    width: auto; /* コンテンツの幅に合わせて調整 */
+    padding: 20px; /* 内側にパディングを追加して見栄えを良くする */
+    text-align: right; /* テキストを右寄せ */
+}
+
 
 button {
     margin-top: 2rem;
