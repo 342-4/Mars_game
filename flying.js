@@ -597,3 +597,4 @@ function closeRepairModal() {
 
 //初期表示更新
 updateDisplay();
+updateResourceBars();
