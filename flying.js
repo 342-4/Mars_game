@@ -121,23 +121,13 @@ function nextDay() {
     setTimeout(() => {
         fade.classList.add("active"); // 暗転開始
 
-        if (day <= spaceYDay && (day - lastSpaceYLogDay) % 3 === 0) {
+        if (day <= spaceYDay && (day % 3)-2 === 0) {
                 if (day === spaceYDay) {
                     addSpaceYEvent("🚨 SpaceY社のロケットが火星に到達しました！");
                 } else {
                     // 達成度を計算 (現在の日にち / 到達目標日) * 100
-                    const progressPercentage = Math.min(100, Math.floor((day / spaceYDay) * 100));
-                    let message = `火星到達まで ${progressPercentage}%`;
-
-                    if (progressPercentage < 20) {
-                        message = "SpaceY社のロケット：\n火星への長旅が始まりました。";
-                    } else if (progressPercentage < 50) {
-                        message = "SpaceY社のロケット：\n順調に飛行中、中間地点に接近。";
-                    } else if (progressPercentage < 80) {
-                        message = "SpaceY社のロケット：\n火星軌道への最終調整段階に入りました。";
-                    } else if (progressPercentage < 100) {
-                        message = "SpaceY社のロケット：\n火星大気圏突入準備中、緊張が高まります。";
-                    }
+                    const progressPercentage = (((day+1)/3)+1)*10;
+                    let message =`SpaceY:火星到達まで ${progressPercentage}%`;
                     addSpaceYEvent(message); // 表示を改行とパーセンテージに変更
                 }
                 lastSpaceYLogDay = day; // Update the last SpaceY log day
@@ -248,7 +238,7 @@ function addSpaceYEvent(message) {
     const spaceyLog = document.getElementById("spacey-messages");
     if (spaceyLog) {
         const li = document.createElement("li");
-        li.textContent = `【${day}日目】${message}`;
+        li.textContent = `【${day+1}日目】${message}`;
         spaceyLog.prepend(li); // ログの先頭に追加
     }
 }
