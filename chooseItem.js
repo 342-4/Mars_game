@@ -1,5 +1,9 @@
-const weightLimit = 100;
+const baseWeightLimit = 100;
+const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
+const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;
+document.getElementById("weight-limit").textContent = weightLimit;
+
 
 //アイテムの定義
 const items = [

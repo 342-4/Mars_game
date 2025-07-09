@@ -31,10 +31,13 @@ let malfunctionsDay = {
   hullDamaged: false
 };
 
+//ゲームオーバーになったら上限を10kgずつ増やすようにする
+const baseWeightLimit = 100;
+const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
+const weightLimit = baseWeightLimit + deathCount * 10;
 
-const weightLimit = 100;//最大積載量
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(4, 5); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(15, 19); // 28〜32日目のどこかでクリア
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
@@ -82,11 +85,20 @@ function checkGameOver() {
     checkAbnormalStatus();  //異常状態を記録
     localStorage.setItem("finalDay", day);  //日数を保存
 
-     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
+    const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
 
-    if (health <= 0) location.href = "result2.html";//結果ページ(失敗ver)に移行
-    else if(day >= goalDay) location.href = "result1.html";//結果ページ（成功ver）に移行
+    if (health <= 0) {
+        // 失敗 → deathCount を1増やす
+        const count = parseInt(localStorage.getItem("deathCount") || "0");
+        localStorage.setItem("deathCount", count + 1);
+
+        location.href = "result2.html"; // 結果ページ(失敗ver)
+    } else if (day >= goalDay) {
+        location.href = "result1.html"; // 成功時は deathCount を増やさない
+    }
 }
+
+
 
 //体力バーの枠線を制御する関数追加
 function updateHealthHighlight() {
