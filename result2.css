@@ -32,7 +32,7 @@ body {
 .content-wrapper {
     position: absolute; /* 親要素（body）を基準に絶対配置 */
     bottom: 20px; /* 下から20pxの位置 */
-    right: 600px; /* 右から20pxの位置 */
+    right: 200px; /* 右から20pxの位置 */
     width: auto; /* コンテンツの幅に合わせて調整 */
     padding: 20px; /* 内側にパディングを追加して見栄えを良くする */
     text-align: right; /* テキストを右寄せにする */
