@@ -30,7 +30,7 @@ body {
 }
 
 .content-wrapper {
-    position: absolute; /* 親要素（body）を基準に絶対配置 */
+    position: absolute; /* 親要素を基準に絶対配置 */
     bottom: 20px; /* 下から20pxの位置 */
     right: 600px; /* 右から20pxの位置 */
     width: auto; /* コンテンツの幅に合わせて調整 */
