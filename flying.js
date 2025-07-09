@@ -7,11 +7,11 @@ let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
 let malfunctions = {
-  comms: false,
-  oxygen: false,
-  waterGen: false,
-  fuel: false,
-  hullDamaged: false
+    comms: false,
+    oxygen: false,
+    waterGen: false,
+    fuel: false,
+    hullDamaged: false
 };
 const maxFuel = 100;
 const maxOxygen = 100;
@@ -20,15 +20,12 @@ const maxOxygen = 100;
 let currentFuel = 100;
 let currentOxygen = 100;
 
-
-
-
 let malfunctionsDay = {
-  comms: false,
-  oxygen: false,
-  waterGen: false,
-  fuel: false,
-  hullDamaged: false
+    comms: false,
+    oxygen: false,
+    waterGen: false,
+    fuel: false,
+    hullDamaged: false
 };
 
 //ゲームオーバーになったら上限を10kgずつ増やすようにする
@@ -37,7 +34,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(20, 25); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(15, 19); // 28〜32日目のどこかでクリア // 修正点: 目標日数を15〜19日に変更
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
@@ -78,8 +75,6 @@ function checkAbnormalStatus() {
     }
 }
 
-
-
 //ゲームオーバー判定
 function checkGameOver() {
     checkAbnormalStatus();  //異常状態を記録
@@ -98,19 +93,17 @@ function checkGameOver() {
     }
 }
 
-
-
 //体力バーの枠線を制御する関数追加
 function updateHealthHighlight() {
-  const hunger = parseInt(document.getElementById("hunger").textContent);
-  const thirst = parseInt(document.getElementById("thirst").textContent);
-  const healthBar = document.getElementById("health-bar");
+    const hunger = parseInt(document.getElementById("hunger").textContent);
+    const thirst = parseInt(document.getElementById("thirst").textContent);
+    const healthBar = document.getElementById("health-bar");
 
-  if (hunger >= 50 && thirst >= 50) {
-    healthBar.classList.add("health-highlight");
-  } else {
-    healthBar.classList.remove("health-highlight");
-  }
+    if (hunger >= 50 && thirst >= 50) {
+        healthBar.classList.add("health-highlight");
+    } else {
+        healthBar.classList.remove("health-highlight");
+    }
 }
 
 //次の日に進める処理
@@ -124,7 +117,7 @@ function nextDay() {
 
     setTimeout(() => {
         fade.classList.add("active"); // 暗転開始
-    
+
         // アニメーション終了後にステータス処理を実行
         setTimeout(() => {
             day++; // 日付を進める
@@ -191,13 +184,12 @@ function nextDay() {
             updateDisplay(); // 画面表示更新
             updateResourceBars();
 
-
             astronaut.classList.remove("walking"); // 歩行停止
 
             setTimeout(() => {
                 fade.classList.remove("active");
                 checkGameOver();
-                
+
                 malfunctionsDay = { ...malfunctions };
             }, 1000);
 
@@ -205,22 +197,113 @@ function nextDay() {
     }, 3000); // 3秒アニメーション完了後に明転
 }
 
+// グローバルスコープに移動した修理関連の関数 // 変更点: ここから修理関連関数
+let selectedRepairPart = null;
+
+function getRepairMessage(part) {
+    switch (part) {
+        case "fuel": return "燃料缶を使いますか？";
+        case "oxygen": return "酸素ボンベを使いますか？";
+        default: return "修理キットを使いますか？";
+    }
+}
+
+function getRepairLabel(part) {
+    const labels = {
+        hullDamaged: "☄️ 船体",
+        comms: "📡 通信機",
+        oxygen: "🔧 酸素供給装置",
+        waterGen: "🚱 水生成装置",
+        fuel: "⛽️ 燃料タンク"
+    };
+    return labels[part] || part;
+}
+
+function promptRepair(part) {
+    selectedRepairPart = part;
+    document.getElementById("repair-message").textContent = getRepairLabel(part) + "を修理しますか？";
+    document.getElementById("repair-confirm").classList.remove("hidden");
+}
+
+function confirmRepair(doRepair) {
+    document.getElementById("repair-confirm").classList.add("hidden");
+    if (doRepair && selectedRepairPart) {
+        repairSystem(selectedRepairPart);
+    }
+    selectedRepairPart = null; // リセット
+}
+
+function repairSystem(part) {
+    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
+    let toolName = "修理キット";
+    if (part === "fuel") toolName = "燃料缶";
+    if (part === "oxygen") toolName = "酸素ボンベ";
+
+    const tool = cargo.find(i => i.name === toolName);
+
+    if (!tool || tool.quantity <= 0) {
+        alert(`${toolName} がありません！`);
+        return;
+    }
+
+    if (!malfunctions[part]) {
+        alert("この部分は故障していません！");
+        return;
+    }
+
+    // 修理実行
+    tool.quantity--;
+    localStorage.setItem('cargo', JSON.stringify(cargo));
+    malfunctions[part] = false;
+    malfunctionsDay[part] = false;
+
+    // 修理時に酸素・燃料を全回復 // 変更点: ここで酸素・燃料を全回復
+    if (part === "oxygen") {
+        currentOxygen = 100;
+    }
+    if (part === "fuel") {
+        currentFuel = 100;
+    }
+
+    let message = "";
+    switch (part) {
+        case "hullDamaged":
+            message = "☄️ 船体を修理しました。";
+            break;
+        case "comms":
+            message = "📡 通信機を修理しました。";
+            break;
+        case "oxygen":
+            message = "🔧 酸素供給装置を修理しました。";
+            break;
+        case "fuel":
+            message = "⛽️ 燃料タンクを修理しました。";
+            break;
+        case "waterGen":
+            message = "🚱 水生成装置を修理しました。";
+            break;
+    }
+
+    addEvent(message);
+    updateDisplay();
+    updateResourceBars(); // 変更点: リソースバーの更新を呼び出し
+} // 変更点: ここまで修理関連関数
 
 //ランダムイベント発生関数
-function triggerRandomEvent(abnormalStatus,day) {
+function triggerRandomEvent(abnormalStatus, day) {
     const rand = Math.random();//ランダムな小数値
     const bg = document.querySelector('.background'); // 背景要素を取得
 
-    if (rand < 0.03||day==2) {
+    if (rand < 0.03 || day == 2) {
         // 宇宙酔い（3%）または、2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
-        if(bg){
+        if (bg) {
             bg.style.backgroundImage = "url('image/spaceShip_Drunk.png')";
         }
-    }else{
-        if(bg){
+    } else {
+        if (bg) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
         if (rand < 0.05) {
@@ -229,14 +312,14 @@ function triggerRandomEvent(abnormalStatus,day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
-            if(bg){
+            if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
         } else if (rand < 0.23) {
             malfunctions.hullDamaged = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
-            const type = getRandomInt(4, 4);
+            const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
             if (type === 1) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
@@ -254,55 +337,10 @@ function triggerRandomEvent(abnormalStatus,day) {
                 stress += 10;
                 malfunctions.fuel = true;
             }
-        }else{
+        } else {
             addEvent("✅ 今日は特に異常なし。");
         }
     }
-
-function repairSystem(part) {
-  const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
-  const kit = cargo.find(i => i.name === '修理キット');
-
-  if (!kit || kit.quantity <= 0) {
-    alert("修理キットがありません！");
-    return;
-  }
-
-  if (!malfunctions[part]) {
-    alert("この部分は故障していません！");
-    return;
-  }
-
-  // 修理実行
-  kit.quantity--;
-  localStorage.setItem('cargo', JSON.stringify(cargo));
-  malfunctions[part] = false;
-  malfunctionsDay[part] = false; 
-
-  let message = "";
-  switch (part) {
-    case "hullDamaged":
-      message = "☄️ 船体を修理しました。";
-      break;
-    case "comms":
-      message = "📡 通信機を修理しました。";
-      break;
-    case "oxygen":
-      message = "🔧 酸素供給装置を修理しました。";
-      break;
-    case "fuel":
-      message = "⛽️ 燃料タンクを修理しました。";
-      break;
-    case "waterGen":
-      message = "🚱 水生成装置を修理しました。";
-      break;
-  }
-
-  addEvent(message);
-  updateDisplay();
-}
-
-    
 
     // ステータスの限界値チェック
     if (health < 0) health = 0;
@@ -333,17 +371,6 @@ function addEvent(message) {
     }
 }
 
-function toggleLog() {
-    const log = document.getElementById("event-log");
-    const button = document.getElementById("toggle-log");
-    log.classList.toggle("expanded");
-    if (log.classList.contains("expanded")) {
-        button.textContent = "▲";
-    } else {
-        button.textContent = "▼";
-    }
-}
-
 function eat(n) {
     const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
 
@@ -369,7 +396,7 @@ function eat(n) {
     updateMealQuantities();
 
     // 空腹・水分を変化させる
-    switch(n){
+    switch (n) {
         case 1: // 加水食品
             hunger += 10;
             break;
@@ -393,10 +420,10 @@ function eat(n) {
 
     // savedCargo の内容を items に反映
     savedCargo.forEach(savedItem => {
-    const match = items.find(item => item.name === savedItem.name);
-    if (match) {
-        match.quantity = savedItem.quantity;
-    }
+        const match = items.find(item => item.name === savedItem.name);
+        if (match) {
+            match.quantity = savedItem.quantity;
+        }
     })
 
     updateDisplay();         // ステータス更新
@@ -405,12 +432,10 @@ function eat(n) {
 
 }
 
-
 //トレーニング処理
 function train() {
     //トレーニングにするのに十分な状態であるかの確認
     if (hunger < 20 || thirst < 20 || health < 10) {
-        alert("体力・空腹・水分が足りません！！！");
         alert("体力・空腹・水分が足りません！！！");
         return;
     }
@@ -426,38 +451,36 @@ function toggleLogSize() {
     logSection.classList.toggle("collapsed");
 }
 
-
 const items = [
-  { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
-  { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
-  { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
-  { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
-  { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
-  { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
-  { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
+    { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
+    { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
+    { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
+    { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
+    { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
+    { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
+    { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
 ];
 // chooseItem.js から cargo データを取得
 const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
 
 // savedCargo の内容を items に反映
 savedCargo.forEach(savedItem => {
-  const match = items.find(item => item.name === savedItem.name);
-  if (match) {
-    match.quantity = savedItem.quantity;
-  }
+    const match = items.find(item => item.name === savedItem.name);
+    if (match) {
+        match.quantity = savedItem.quantity;
+    }
 });
 
 function updateResourceBars() {
-  // currentFuel, currentOxygenに合わせてバーと数値を更新
-  document.getElementById("fuel-bar").style.width = `${currentFuel}%`;
-  document.getElementById("oxygen-bar").style.width = `${currentOxygen}%`;
-  document.getElementById("fuel").textContent = currentFuel;
-  document.getElementById("oxygen").textContent = currentOxygen;
+    // currentFuel, currentOxygenに合わせてバーと数値を更新
+    document.getElementById("fuel-bar").style.width = `${currentFuel}%`;
+    document.getElementById("oxygen-bar").style.width = `${currentOxygen}%`;
+    document.getElementById("fuel").textContent = currentFuel;
+    document.getElementById("oxygen").textContent = currentOxygen;
 }
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
-
 
 //イベントログのサイズを切り替える処理
 function toggleLogSize() {
@@ -467,22 +490,22 @@ function toggleLogSize() {
 
 // 所持品の描画
 function renderItems() {
-  itemList.innerHTML = '';
-  currentWeight = 0;
+    itemList.innerHTML = '';
+    currentWeight = 0;
 
-  items.forEach((item) => {//全アイテムについて一つずつ処理を行う
-    currentWeight += item.weight * item.quantity;//重さ×個数
+    items.forEach((item) => {//全アイテムについて一つずつ処理を行う
+        currentWeight += item.weight * item.quantity;//重さ×個数
 
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
       <img src="${item.image}" alt="${item.name}" class="item-image">
       <span>${item.name} (${item.weight}kg) × ${item.quantity} 個</span>
     `;
-    itemList.appendChild(div);
-  });
-  //現在の合計重量を画面に表示
-  currentWeightText.textContent = currentWeight;
+        itemList.appendChild(div);
+    });
+    //現在の合計重量を画面に表示
+    currentWeightText.textContent = currentWeight;
 }
 
 function resizeBackground() {
@@ -494,16 +517,15 @@ function resizeBackground() {
 window.addEventListener('resize', resizeBackground);
 window.addEventListener('load', resizeBackground);
 
-
 // モーダル(所持品リスト)表示・非表示
 document.getElementById("bag-button").addEventListener("click", () => {
-  renderItems();
-  document.getElementById("bag-modal").classList.remove("hidden");
+    renderItems();
+    document.getElementById("bag-modal").classList.remove("hidden");
 });
 
 //所持品モーダルを閉じる
 function closeBag() {
-  document.getElementById("bag-modal").classList.add("hidden");
+    document.getElementById("bag-modal").classList.add("hidden");
 }
 
 // 食事モーダル表示
@@ -512,10 +534,9 @@ function openMeal() {
     updateMealQuantities();  // ← これを必ず呼ぶ
 }
 
-
 // 食事モーダル非表示
 function closeMeal() {
-  document.getElementById("meal-modal").classList.add("hidden");
+    document.getElementById("meal-modal").classList.add("hidden");
 }
 
 //食事モーダルにおける残数管理、表示
@@ -534,13 +555,11 @@ function updateMealQuantities() {
 }
 //修理ボタンの開け閉め
 function openRepairModal() {
-  document.getElementById("repair-modal").classList.remove("hidden");
+    document.getElementById("repair-modal").classList.remove("hidden");
 }
 function closeRepairModal() {
-  document.getElementById("repair-modal").classList.add("hidden");
+    document.getElementById("repair-modal").classList.add("hidden");
 }
-
-
 
 //初期表示更新
 updateDisplay();

@@ -113,69 +113,6 @@
 </div>
 
 
-<script>
-
-
-  let selectedRepairPart = null;
-
-  // 修理メッセージをカスタマイズ
-  function getRepairMessage(part) {
-    switch (part) {
-      case "fuel": return "燃料缶を使いますか？";
-      case "oxygen": return "酸素ボンベを使いますか？";
-      default: return "修理キットを使いますか？";
-    }
-  }
-
-  function getRepairLabel(part) {
-    const labels = {
-      hullDamaged: "☄️ 船体",
-      comms: "📡 通信機",
-      oxygen: "🔧 酸素供給装置",
-      waterGen: "🚱 水生成装置",
-      fuel: "⛽️ 燃料タンク"
-    };
-    return labels[part] || part;
-  }
-
-  function promptRepair(part) {
-    selectedRepairPart = part;
-    document.getElementById("repair-message").textContent = getRepairLabel(part) + " - " + getRepairMessage(part);
-    document.getElementById("repair-confirm").classList.remove("hidden");
-  }
-
-  function confirmRepair(doRepair) {
-    document.getElementById("repair-confirm").classList.add("hidden");
-    if (!doRepair || !selectedRepairPart) return;
-
-    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
-
-    let toolName = "修理キット";
-    if (selectedRepairPart === "fuel") toolName = "燃料缶";
-    if (selectedRepairPart === "oxygen") toolName = "酸素ボンベ";
-
-    const tool = cargo.find(i => i.name === toolName);
-
-    if (!tool || tool.quantity <= 0) {
-      alert(`${toolName} がありません！`);
-      return;
-    }
-
-    if (!malfunctions[selectedRepairPart]) {
-      alert("この部分は故障していません！");
-      return;
-    }
-
-    tool.quantity--;
-    localStorage.setItem('cargo', JSON.stringify(cargo));
-    malfunctions[selectedRepairPart] = false;
-    malfunctionsDay[selectedRepairPart] = false;
-    addEvent(getRepairLabel(selectedRepairPart) + " を修理しました。");
-    updateDisplay();
-  }
-</script>
-
-
 
     <div style="text-align:center" class="summary">
         <button onclick="nextDay()" style="text-align:center">次の日へ</button>
