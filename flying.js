@@ -28,6 +28,9 @@ let malfunctionsDay = {
     hullDamaged: false
 };
 
+const spaceYDay = 27;
+let lastSpaceYLogDay = 0;
+
 //ゲームオーバーになったら上限を10kgずつ増やすようにする
 const baseWeightLimit = 100;
 const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
@@ -118,10 +121,32 @@ function nextDay() {
     setTimeout(() => {
         fade.classList.add("active"); // 暗転開始
 
+        if (day <= spaceYDay && (day - lastSpaceYLogDay) % 3 === 0) {
+                if (day === spaceYDay) {
+                    addSpaceYEvent("🚨 SpaceY社のロケットが火星に到達しました！");
+                } else {
+                    // 達成度を計算 (現在の日にち / 到達目標日) * 100
+                    const progressPercentage = Math.min(100, Math.floor((day / spaceYDay) * 100));
+                    let message = `火星到達まで ${progressPercentage}%`;
+
+                    if (progressPercentage < 20) {
+                        message = "SpaceY社のロケット：\n火星への長旅が始まりました。";
+                    } else if (progressPercentage < 50) {
+                        message = "SpaceY社のロケット：\n順調に飛行中、中間地点に接近。";
+                    } else if (progressPercentage < 80) {
+                        message = "SpaceY社のロケット：\n火星軌道への最終調整段階に入りました。";
+                    } else if (progressPercentage < 100) {
+                        message = "SpaceY社のロケット：\n火星大気圏突入準備中、緊張が高まります。";
+                    }
+                    addSpaceYEvent(message); // 表示を改行とパーセンテージに変更
+                }
+                lastSpaceYLogDay = day; // Update the last SpaceY log day
+            }
+
         // アニメーション終了後にステータス処理を実行
         setTimeout(() => {
             day++; // 日付を進める
-
+            
             // 故障中は燃料・酸素を20ずつ減らす
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 currentFuel -= 20;
@@ -217,6 +242,15 @@ function getRepairLabel(part) {
         fuel: "⛽️ 燃料タンク"
     };
     return labels[part] || part;
+}
+
+function addSpaceYEvent(message) {
+    const spaceyLog = document.getElementById("spacey-messages");
+    if (spaceyLog) {
+        const li = document.createElement("li");
+        li.textContent = `【${day}日目】${message}`;
+        spaceyLog.prepend(li); // ログの先頭に追加
+    }
 }
 
 function promptRepair(part) {

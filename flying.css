@@ -230,21 +230,60 @@ body {
 
 
 
+/* イベントログ */
 .event-log {
     position: fixed;
-    top: 10px;
+    top: 10px; /* 画面上部からの位置 */
     right: 10px;
-    width: 250px;
-    background-color: #f9f9f9;
-    border: 2px solid #888;
+    width: 250px; /* 変更: 幅を250pxに統一 */
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒い背景 */
+    border: 1px solid #fff;
+    border-radius: 8px;
     padding: 10px;
-    border-radius: 10px;
-    font-size: 14px;
+    color: #fff;
+    font-size: 0.9em;
+    overflow-y: auto;
     z-index: 1000;
-    cursor: pointer;
-    transition: max-height 0.3s ease, overflow 0.3s ease;
-    overflow: hidden;
-    max-height: 100px; /* 初期状態で1件分だけ表示 */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    max-height: 250px; /* 初期表示の高さ */
+    transition: max-height 0.3s ease;
+}
+
+/* SpaceYログのスタイル */
+#spacey-log {
+    position: fixed;
+    top: 270px; /* 変更: イベントログの下に配置するための位置調整 */
+    right: 10px;
+    width: 250px; /* 変更: イベントログと同じ幅に調整 */
+    max-height: 200px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00ffff;
+    border-radius: 8px;
+    padding: 10px;
+    color: #00ffff;
+    font-size: 0.9em;
+    overflow-y: auto;
+    z-index: 900;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+#spacey-log h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #00ffff;
+    text-align: center;
+}
+
+#spacey-log ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#spacey-log ul li {
+    margin-bottom: 5px;
+    padding-left: 5px;
+    border-left: 2px solid #00ffff;
 }
 
 /* 展開されたとき（全ログ表示） */
