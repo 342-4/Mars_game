@@ -37,7 +37,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(15, 19); // 28〜32日目のどこかでクリア
+const goalDay = getRandomInt(20, 25); // 28〜32日目のどこかでクリア
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
