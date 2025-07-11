@@ -87,9 +87,9 @@ function checkGameOver() {
 
     if (health <= 0) {
         // 失敗 → deathCount を1増やす
-        const count = parseInt(localStorage.getItem("deathCount") || "0");
-        localStorage.setItem("deathCount", count + 1);
-
+        let deathCount = parseInt(localStorage.getItem("deathCount")) || 0;
+        deathCount++;
+        localStorage.setItem("deathCount", deathCount);
         location.href = "result2.html"; // 結果ページ(失敗ver)
     } else if (day >= goalDay) {
         location.href = "result1.html"; // 成功時は deathCount を増やさない
