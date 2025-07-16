@@ -179,7 +179,7 @@ function nextDay() {
                 addEvent("🔧 酸素供給装置の故障が続いています。");
             }
             if (malfunctions.waterGen && malfunctionsDay.waterGen) {
-                thirst -= 15;
+                thirst -= 25;
                 addEvent("🚱 水生成装置の故障が続いています。");
             }
             if (malfunctions.fuel && malfunctionsDay.fuel) {
@@ -199,7 +199,7 @@ function nextDay() {
 
             // ステータスの減少
             hunger -= getRandomInt(10, 15);
-            thirst -= getRandomInt(5, 10);
+            //thirst -= getRandomInt(5, 10);//水分は水生成装置の故障中のみ減少
             training -= getRandomInt(5, 10);
             stress += getRandomInt(2, 5);
 
