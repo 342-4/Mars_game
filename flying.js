@@ -203,6 +203,10 @@ function nextDay() {
             training -= getRandomInt(5, 10);
             stress += getRandomInt(2, 5);
 
+            if(!(malfunctions.waterGen && malfunctionsDay.waterGen)){
+                thirst += 20; // 水生成装置が正常なら水分は回復
+            }
+
             hunger = Math.max(0, hunger);
             thirst = Math.max(0, thirst);
             training = Math.max(0, training);
