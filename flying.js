@@ -57,7 +57,7 @@ function updateDisplay() {
     document.getElementById("health-bar").style.width = `${health}%`;
     document.getElementById("hunger-bar").style.width = `${hunger}%`;
     document.getElementById("thirst-bar").style.width = `${thirst}%`;
-    document.getElementById("training-bar").style.width = `${training}%`;
+    document.getElementById("training-bar").style.width = `${training*2}%`;
     document.getElementById("stress-bar").style.width = `${stress}%`;
 
     updateHealthHighlight();
