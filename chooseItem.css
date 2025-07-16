@@ -54,5 +54,25 @@ body {
     cursor: pointer;
 }
 .summary {
-    margin-top: 30px;
+   margin-top: -120px; /* 例: ボタンを上に50px移動させる場合 */
+}
+/* chooseItem.css */
+
+/* ... 既存のCSSコード ... */
+
+.summary button { /* .summary クラス内の button 要素にスタイルを適用 */
+  font-size: 32px; /* フォントサイズを大きくする */
+  padding: 20px 20px; /* パディングを増やしてボタン全体のサイズを大きくする */
+  /* 必要に応じて、min-width や min-height などで最小サイズを設定することも可能です */
+  border: none; /* デフォルトの枠線を削除 */
+  border-radius: 8px; /* 角を丸くする */
+  background-color: #4CAF50; /* 背景色を変更 (例: 緑) */
+  color: white; /* 文字色を白に */
+  cursor: pointer; /* マウスオーバー時にカーソルをポインタにする */
+  transition: background-color 0.3s ease; /* ホバー時のアニメーション */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 影を追加 */
+}
+
+.summary button:hover {
+  background-color: #45a049; /* ホバー時の背景色 */
 }
