@@ -7,6 +7,7 @@ let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
 let malfunctions = {
+    Drunkenness: false,
     comms: false,
     oxygen: false,
     waterGen: false,
@@ -153,7 +154,7 @@ function nextDay() {
                 }
                 lastSpaceYLogDay = day;
             }
-
+            let flag = false;
             // 故障中の燃料・酸素減少、その他ステータス変動
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 currentFuel -= 20;
@@ -169,23 +170,32 @@ function nextDay() {
                 hunger -= 10;
                 thirst -= 10;
                 addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+                flag = true; // 船体損傷が続いている場合はフラグを立てる
             }
             if (malfunctions.comms && malfunctionsDay.comms) {
                 stress += 15;
                 addEvent("📡 通信機器の故障が続いています。");
+                flag = true; // 通信機器の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.oxygen && malfunctionsDay.oxygen) {
                 health -= 10;
                 addEvent("🔧 酸素供給装置の故障が続いています。");
+                flag = true; // 酸素供給装置の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.waterGen && malfunctionsDay.waterGen) {
                 thirst -= 25;
                 addEvent("🚱 水生成装置の故障が続いています。");
+                flag = true; // 水生成装置の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 stress += 10;
                 addEvent("⛽️ 燃料タンクの故障が続いています。");
+                flag = true; // 燃料タンクの故障が続いている場合はフラグを立てる
             }
+            if (!flag) {
+                addEvent("✅ 故障はありません。");
+            }
+
 
             checkAbnormalStatus();
             const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
@@ -538,14 +548,6 @@ function updateResourceBars() {
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
-const statusDescriptions = {
-  "health": "体力：低下すると行動が制限され、ゼロでゲームオーバーになります。",
-  "hunger": "空腹：食事で回復。低いと体力が減少します。",
-  "thirst": "水分：水を飲んで回復。低いと健康に影響が出ます。",
-  "training": "トレーニング：筋肉量を表します。体力増加に影響します。",
-  "stress": "ストレス：高いと効率が悪化します。休息などで軽減可能。",
-};
-
 
 //イベントログのサイズを切り替える処理
 function toggleLogSize() {
