@@ -5,7 +5,11 @@ let currentWeight = 0;
 document.getElementById("weight-limit").textContent = weightLimit;
 //最大積載量をリセットするときに使う
 localStorage.removeItem("deathCount");
-
+// --- 効果音の読み込み ---
+const selectSound = new Audio('image/select.mp3'); // ① 効果音ファイルを読み込む
+const shuppatsuSound = new Audio('image/出発.mp3'); // ① 出発.mp3 ファイルを読み込む
+const rocketSound = new Audio('image/ロケット.mp3');
+// 必要であれば音量調整
 //アイテムの定義
 const items = [
     { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png"},
@@ -63,13 +67,34 @@ function changeItem(index, delta) {
     item.quantity = newQuantity;
     currentWeight = newWeight;
     currentWeightText.textContent = currentWeight;
+
+    // --- 効果音の再生 ---
+    if (delta > 0) { // ② '+'ボタンが押されたときのみ再生
+        selectSound.currentTime = 0; // ③ 再生位置をリセット（連続で鳴らすため）
+        selectSound.play().catch(e => console.error("効果音再生エラー:", e)); // ④ 効果音を再生
+    }
+    if (delta > 0) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(e => console.error("効果音再生エラー:", e));
+    }
     renderItems();
 }
 
+
 //次の場面に移行
 function startMission() {
+    // 「出発」ボタンの効果音を再生
+    shuppatsuSound.currentTime = 0;
+    shuppatsuSound.play().catch(e => console.error("出発効果音再生エラー:", e));
+
     const summary = items.map(item => `${item.name}×${item.quantity}`).join(', ');
+    
+    // alertが閉じられた直後にロケット効果音を再生するために、alertの後に配置
     alert("出発準備完了！\n選んだ物資:\n" + summary + `\n合計重量: ${currentWeight}kg`);
+
+    // ★変更: alertが閉じられた直後にロケット効果音を再生するように移動
+    rocketSound.currentTime = 0;
+    rocketSound.play().catch(e => console.error("ロケット効果音再生エラー:", e));
 
     //：次の画面にデータを渡したい場合
     localStorage.setItem('cargo', JSON.stringify(items));
@@ -87,5 +112,5 @@ function startMission() {
         }
     }, 30);
 }
-//
+
 renderItems();
