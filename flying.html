@@ -12,37 +12,52 @@
   <div class="day-display">
     <h2>日数: <span id="day">1</span> 日目</h2>
   </div>
+  <div class="buttons" style="margin: 10px 0;">
+    <button id="bag-button" title="所持品を見る">
+      <img src="image/backpack.png" alt="バック" class="bag-icon" style="width:48px; height:48px;">
+    </button>
+  </div>
+
+  <div class="summary" style="margin-top: 10px;">
+    <button onclick="nextDay()" class="next-day-button">次の日へ</button>
+  </div>
+</div>
+    
+
   <img id="astronaut" src="image/man.png" alt="宇宙飛行士">
 
   <div class="status-container">
     <div class="status-bar">
-      <div>
-        体力: <span id="health">100</span>
-        <span id="abnormal-status" class="abnormal-status"></span>
-      </div>
-      <div class="bar-container">
-        <div id="health-bar" class="bar red"></div>
-      </div>
-      空腹: <span id="hunger">100</span>
-      <div class="bar-container">
-        <div class="bar-threshold-inside"></div>
-        <div id="hunger-bar" class="bar orange"></div>
-      </div>
-      水分: <span id="thirst">100</span>
-      <div class="bar-container">
-        <div class="bar-threshold-inside"></div>
-        <div id="thirst-bar" class="bar blue"></div>
-      </div>
-      トレーニング: <span id="training">0</span>
-      <div class="bar-container">
-        <div id="training-bar" class="bar green"></div>
-      </div>
-      ストレス: <span id="stress">0</span>
-      <div class="bar-container">
-        <div id="stress-bar" class="bar purple"></div>
-      </div>
-    </div>
+  <div>
+    体力: <span id="health" title="体力：低下すると行動が制限され、ゼロでゲームオーバーになります。">100</span>
+    <span id="abnormal-status" class="abnormal-status"></span>
   </div>
+  <div class="bar-container">
+    <div id="health-bar" class="bar red"></div>
+  </div>
+
+  空腹: <span id="hunger" title="空腹：食事で回復。低いと体力が減少します。">100</span>
+  <div class="bar-container">
+    <div class="bar-threshold-inside"></div>
+    <div id="hunger-bar" class="bar orange"></div>
+  </div>
+
+  水分: <span id="thirst" title="水分：水を飲んで回復。低いと健康に影響が出ます。">100</span>
+  <div class="bar-container">
+    <div class="bar-threshold-inside"></div>
+    <div id="thirst-bar" class="bar blue"></div>
+  </div>
+
+  トレーニング: <span id="training" title="トレーニング：筋肉量を表します。体力増加に影響します。">0</span>
+  <div class="bar-container">
+    <div id="training-bar" class="bar green"></div>
+  </div>
+
+  ストレス: <span id="stress" title="ストレス：高いと効率が悪化します。休息などで軽減可能。">0</span>
+  <div class="bar-container">
+    <div id="stress-bar" class="bar purple"></div>
+  </div>
+</div>
 
   <!-- 酸素＆ガソリンバー（右下） -->
   <div class="bottom-right-status">
@@ -61,11 +76,7 @@
   </div>
 
 
-  <div class="buttons">
-    <button id="bag-button" title="所持品を見る">
-      <img src="image/backpack.png" alt="バック" class="bag-icon">
-    </button>
-  </div>
+ 
 
   <div class="buttons lower-buttons">
     <button onclick="openMeal()" title="食事で空腹・水分を回復">食事</button>
@@ -109,12 +120,6 @@
       <button onclick="confirmRepair(true)">使用する</button>
       <button onclick="confirmRepair(false)">キャンセル</button>
     </div>
-  </div>
-
-
-
-  <div style="text-align:center" class="summary">
-    <button onclick="nextDay()" style="text-align:center">次の日へ</button>
   </div>
 
   <!--イベントログ-->

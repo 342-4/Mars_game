@@ -538,6 +538,14 @@ function updateResourceBars() {
 
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
+const statusDescriptions = {
+  "health": "体力：低下すると行動が制限され、ゼロでゲームオーバーになります。",
+  "hunger": "空腹：食事で回復。低いと体力が減少します。",
+  "thirst": "水分：水を飲んで回復。低いと健康に影響が出ます。",
+  "training": "トレーニング：筋肉量を表します。体力増加に影響します。",
+  "stress": "ストレス：高いと効率が悪化します。休息などで軽減可能。",
+};
+
 
 //イベントログのサイズを切り替える処理
 function toggleLogSize() {

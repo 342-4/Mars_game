@@ -503,27 +503,28 @@ body {
 /* ... 既存のCSSコード ... */
 
 /* 「次の日へ」ボタンのスタイル */
-.summary button {
+.next-day-button {
     font-size: 32px;
-    padding: 10px px;
+    padding: 10px; /* ここは「10px px」ではなく「10px」のみでOK */
     border: none;
     border-radius: 8px;
-    background-color: #4CAF50; /* ← この行を緑色に変更 */
+    background-color: #4CAF50; /* 緑色 */
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.1s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: -45px; /* 必要に応じて調整 */
+    margin-top: -45px; /* 必要に応じて調整してください */
 }
 
-.summary button:hover {
-    background-color: #45a049; /* ← ホバー時の色も緑色系に変更 */
+.next-day-button:hover {
+    background-color: #45a049; /* ホバー時の緑色 */
     transform: translateY(-2px);
 }
 
-.summary button:active {
+.next-day-button:active {
     transform: translateY(1px);
     box-shadow: none;
 }
 
+    
 
