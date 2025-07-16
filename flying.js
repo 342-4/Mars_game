@@ -37,7 +37,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(15, 19); // 28〜32日目のどこかでクリア // 修正点: 目標日数を15〜19日に変更
+const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア // 修正点: 目標日数を15〜19日に変更
 localStorage.setItem("goalDay", goalDay);
 
 //画面表示更新関数
@@ -85,7 +85,7 @@ function checkGameOver() {
 
     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
 
-    if (health <= 0) {
+    if (health <= 0|| currentOxygen <= 0 || currentFuel <= 0) {
         // 失敗 → deathCount を1増やす
         let deathCount = parseInt(localStorage.getItem("deathCount")) || 0;
         deathCount++;
@@ -205,9 +205,6 @@ function nextDay() {
 
             if(!(malfunctions.waterGen && malfunctionsDay.waterGen)){
                 thirst += 20; // 水生成装置が正常なら水分は回復
-                if(thirst > 100) {
-                    thirst = 100; // 水分は最大100)
-                }
             }
 
             hunger = Math.max(0, hunger);
@@ -327,7 +324,6 @@ function repairSystem(part) {
     switch (part) {
         case "hullDamaged":
             message = "☄️ 船体を修理しました。";
-            bg.style.backgroundImage = "url('image/spaceShip.png')";
             break;
         case "comms":
             message = "📡 通信機を修理しました。";
@@ -371,27 +367,29 @@ function triggerRandomEvent(abnormalStatus, day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
-            malfunctions.hullDamaged = true;
             if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
+        } else if (rand < 0.23) {
+            malfunctions.hullDamaged = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
-            if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
+            if (type === 1) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
                 malfunctions.comms = true;
-            } else if (type === 2 && !(malfunctions.oxygen && malfunctionsDay.oxygen)) {
+            } else if (type === 2) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
                 malfunctions.oxygen = true;
-            } else if (type === 3 && !(malfunctions.waterGen && malfunctionsDay.waterGen)) {
+            } else if (type === 3) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
                 malfunctions.waterGen = true;
-            } else if( type === 4 && !(malfunctions.fuel && malfunctionsDay.fuel)) {
+            } else {
                 addEvent("⛽️ 燃料タンク故障！このままだと火星にたどり着けるかわからない、、");
+                stress += 10;
                 malfunctions.fuel = true;
             }
         } else {
@@ -465,7 +463,7 @@ function eat(n) {
             stress += 5;
             break;
         case 4: //水
-            thirst += 10;
+            thirst += 15;
     }
 
     // 上限・下限を調整
@@ -515,7 +513,7 @@ const items = [
     { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
     { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
     { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
-    { name: '水', weight: 5, quantity: 0, image: "image/water.png" }
+    { name: '水', weight: 1, quantity: 0, image: "image/water.png" }
 ];
 // chooseItem.js から cargo データを取得
 const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
@@ -543,7 +541,7 @@ const statusDescriptions = {
   "hunger": "空腹：食事で回復。低いと体力が減少します。",
   "thirst": "水分：水を飲んで回復。低いと健康に影響が出ます。",
   "training": "トレーニング：筋肉量を表します。体力増加に影響します。",
-  "stress": "ストレス：高いと効率が悪化します。休息などで軽減可能。",
+  "stress": "ストレス：100になると到着困難。",
 };
 
 
@@ -625,6 +623,26 @@ function openRepairModal() {
 function closeRepairModal() {
     document.getElementById("repair-modal").classList.add("hidden");
 }
+
+// 食品の説明
+const itemDescriptions = {
+    '加水食品': '加水してすぐ食べられる便利な食品。空腹が10回復する',
+    '缶詰': '長期保存が可能な栄養食品。空腹が20回復する',
+    '半乾燥食品': '軽量で保存性の高い食品。空腹が15回復するがストレスが5増える',
+    '水': '飲料水。水生成装置が壊れた時に役立つ水分が15回復する'
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  const foodItems = document.querySelectorAll('#meal-list li');
+  foodItems.forEach(item => {
+    const img = item.querySelector('img');
+    const name = img.alt;
+    if (itemDescriptions[name]) {
+      img.title = itemDescriptions[name];
+    }
+  });
+});
+
 
 //初期表示更新
 updateDisplay();
