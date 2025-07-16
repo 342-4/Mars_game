@@ -110,34 +110,51 @@ function updateHealthHighlight() {
 }
 
 //次の日に進める処理
+// nextDay() 関数の修正（既存のコードに合わせて調整）
 function nextDay() {
+    const nextDayButton = document.querySelector('.summary button'); // 「次の日へ」ボタン要素を取得
+
+    // 1. ボタンを無効化する
+   // nextDayButton.disabled = true;
+   // nextDayButton.textContent = '進行中...'; 
+
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
 
-    astronaut.classList.remove("walking"); // 連続クリック対策
-    void astronaut.offsetWidth; // 強制再描画でアニメーション再発火
+    // 宇宙飛行士のアニメーションをリセットし、再開
+    // 既存のコードにある void astronaut.offsetWidth; は、リフローを強制してアニメーションを再トリガーする手法です。
+    // 今回はクラスの付け外しで対応するので不要、またはアニメーションがスムーズでない場合に検討。
+    astronaut.classList.remove("walking");
+    void astronaut.offsetWidth; // 強制再描画
     astronaut.classList.add("walking");
 
+    // アニメーションが終了するまでの時間を考慮し、画面暗転を遅延させる (CSSアニメーション: 3s)
     setTimeout(() => {
-        fade.classList.add("active"); // 暗転開始
+        fade.classList.add("active"); // 暗転開始 (CSSトランジション: 1s)
 
-        if (day <= spaceYDay && (day % 3)-2 === 0) {
+        // 画面暗転アニメーションが終了するまでの時間を考慮し、日次処理とページ遷移をさらに遅延させる
+        setTimeout(() => {
+            day++; // 日付を進める (day は既にグローバル変数で定義されています)
+
+            // ここに、nextDay() 内の元々の日次処理をすべて移動します
+            // --- 元の nextDay() 関数内の日次処理ここから ---
+
+            // SpaceYの進捗ログ
+            // `day` が SpaceY到達日数以下かつ、3日ごとにログを出すロジック
+            // 元のコードで `(day % 3)-2 === 0` は `day` が3で割ると2余る日（2, 5, 8...）という意味
+            // ただし、新しい `day` がインクリメントされた後なので、`day` を直接使う
+            if (day <= spaceYDay && (day % 3) === 2) { // dayが2, 5, 8日目などに実行
                 if (day === spaceYDay) {
                     addSpaceYEvent("🚨 SpaceY社のロケットが火星に到達しました！");
                 } else {
-                    // 達成度を計算 (現在の日にち / 到達目標日) * 100
-                    const progressPercentage = (((day+1)/3)+1)*10;
-                    let message =`SpaceY:火星到達まで ${progressPercentage}%`;
-                    addSpaceYEvent(message); // 表示を改行とパーセンテージに変更
+                    const progressPercentage = (((day + 1) / 3) + 1) * 10;
+                    let message = `SpaceY:火星到達まで ${progressPercentage}%`;
+                    addSpaceYEvent(message);
                 }
-                lastSpaceYLogDay = day; // Update the last SpaceY log day
+                lastSpaceYLogDay = day;
             }
 
-        // アニメーション終了後にステータス処理を実行
-        setTimeout(() => {
-            day++; // 日付を進める
-            
-            // 故障中は燃料・酸素を20ずつ減らす
+            // 故障中の燃料・酸素減少、その他ステータス変動
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 currentFuel -= 20;
                 if (currentFuel < 0) currentFuel = 0;
@@ -170,7 +187,7 @@ function nextDay() {
                 addEvent("⛽️ 燃料タンクの故障が続いています。");
             }
 
-            checkAbnormalStatus(); // 異常状態の確認
+            checkAbnormalStatus();
             const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
             const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
 
@@ -199,17 +216,27 @@ function nextDay() {
             updateDisplay(); // 画面表示更新
             updateResourceBars();
 
-            astronaut.classList.remove("walking"); // 歩行停止
+            // --- 元の nextDay() 関数内の日次処理ここまで ---
 
-            setTimeout(() => {
-                fade.classList.remove("active");
-                checkGameOver();
+            // 画面を明るく戻す
+            fade.classList.remove("active");
 
-                malfunctionsDay = { ...malfunctions };
-            }, 1000);
+            // 宇宙飛行士のアニメーションをリセット
+            astronaut.classList.remove("walking");
+            astronaut.style.left = '40px'; // 初期位置に戻す
 
-        }, 500); // 1秒後にステータス処理
-    }, 3000); // 3秒アニメーション完了後に明転
+            // 故障状態の進行（次日への反映）
+            malfunctionsDay = { ...malfunctions };
+
+            // 2. ボタンを再度有効化する
+            nextDayButton.disabled = false;
+            nextDayButton.textContent = '次の日へ'; // ボタンのテキストを元に戻す
+
+            // ゲームオーバー/クリア判定
+            checkGameOver(); // アニメーションと処理が終わった後に判定
+
+        }, 1000); // 画面暗転のトランジション時間 (1秒)
+    }, 3000); // 宇宙飛行士のアニメーション時間 (3秒)
 }
 
 // グローバルスコープに移動した修理関連の関数 // 変更点: ここから修理関連関数

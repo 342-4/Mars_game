@@ -498,7 +498,32 @@ body {
 #repair-confirm.hidden {
   display: none;
 }
+/* flying.css */
 
+/* ... 既存のCSSコード ... */
 
+/* 「次の日へ」ボタンのスタイル */
+.summary button {
+    font-size: 32px;
+    padding: 10px px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50; /* ← この行を緑色に変更 */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: -45px; /* 必要に応じて調整 */
+}
+
+.summary button:hover {
+    background-color: #45a049; /* ← ホバー時の色も緑色系に変更 */
+    transform: translateY(-2px);
+}
+
+.summary button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
 
 
