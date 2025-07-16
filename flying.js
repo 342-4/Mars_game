@@ -7,6 +7,7 @@ let training = 50;//筋肉量
 let stress = 0;//ストレス値
 let eventype = []; //イベントの種類判別
 let malfunctions = {
+    Drunkenness: false,
     comms: false,
     oxygen: false,
     waterGen: false,
@@ -15,6 +16,8 @@ let malfunctions = {
 };
 const maxFuel = 100;
 const maxOxygen = 100;
+
+const bg = document.querySelector('.background'); // 背景要素を取得
 
 // 現在の燃料と酸素も100スタート（変化させる場合は変数で管理）
 let currentFuel = 100;
@@ -27,6 +30,8 @@ let malfunctionsDay = {
     fuel: false,
     hullDamaged: false
 };
+
+let flag = false;// 故障が続いているかのフラグ
 
 const spaceYDay = 27;
 let lastSpaceYLogDay = 0;
@@ -52,7 +57,7 @@ function updateDisplay() {
     document.getElementById("health-bar").style.width = `${health}%`;
     document.getElementById("hunger-bar").style.width = `${hunger}%`;
     document.getElementById("thirst-bar").style.width = `${thirst}%`;
-    document.getElementById("training-bar").style.width = `${training}%`;
+    document.getElementById("training-bar").style.width = `${training*2}%`;
     document.getElementById("stress-bar").style.width = `${stress}%`;
 
     updateHealthHighlight();
@@ -115,8 +120,8 @@ function nextDay() {
     const nextDayButton = document.querySelector('.summary button'); // 「次の日へ」ボタン要素を取得
 
     // 1. ボタンを無効化する
-   // nextDayButton.disabled = true;
-   // nextDayButton.textContent = '進行中...'; 
+    // nextDayButton.disabled = true;
+    // nextDayButton.textContent = '進行中...'; 
 
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
@@ -154,6 +159,39 @@ function nextDay() {
                 lastSpaceYLogDay = day;
             }
 
+
+
+            checkAbnormalStatus();
+            const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
+            const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
+
+            // 条件により体力回復
+            if (hunger >= 50 && thirst >= 50) {
+                const healthpls = getRandomInt(20, 25);
+                health = Math.min(100, health + healthpls);
+            }
+
+            // ステータスの減少
+            hunger -= getRandomInt(10, 15);
+            training -= getRandomInt(5, 10);
+            stress += getRandomInt(2, 5);
+
+            if (!(malfunctions.waterGen && malfunctionsDay.waterGen)) {
+                thirst += 20; // 水生成装置が正常なら水分は回復
+                if (thirst > 100) {
+                    thirst = 100; // 水分は最大100)
+                }
+            }
+
+            hunger = Math.max(0, hunger);
+            thirst = Math.max(0, thirst);
+            training = Math.max(0, training);
+
+            if (hunger === 0 || thirst === 0 || training === 0) {
+                health -= 10;
+                if (health < 0) health = 0;
+            }
+
             // 故障中の燃料・酸素減少、その他ステータス変動
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 currentFuel -= 20;
@@ -169,54 +207,38 @@ function nextDay() {
                 hunger -= 10;
                 thirst -= 10;
                 addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+                flag = true; // 船体損傷が続いている場合はフラグを立てる
             }
             if (malfunctions.comms && malfunctionsDay.comms) {
                 stress += 15;
                 addEvent("📡 通信機器の故障が続いています。");
+                flag = true; // 通信機器の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.oxygen && malfunctionsDay.oxygen) {
                 health -= 10;
                 addEvent("🔧 酸素供給装置の故障が続いています。");
+                flag = true; // 酸素供給装置の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.waterGen && malfunctionsDay.waterGen) {
                 thirst -= 25;
                 addEvent("🚱 水生成装置の故障が続いています。");
+                flag = true; // 水生成装置の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.fuel && malfunctionsDay.fuel) {
                 stress += 10;
                 addEvent("⛽️ 燃料タンクの故障が続いています。");
+                flag = true; // 燃料タンクの故障が続いている場合はフラグを立てる
             }
-
-            checkAbnormalStatus();
-            const abnormalStatusJSON = localStorage.getItem("abnormalStatus");
-            const abnormalStatus = abnormalStatusJSON ? JSON.parse(abnormalStatusJSON) : [];
-
-            // 条件により体力回復
-            if (hunger >= 50 && thirst >= 50) {
-                const healthpls = getRandomInt(20, 25);
-                health = Math.min(100, health + healthpls);
-            }
-
-            // ステータスの減少
-            hunger -= getRandomInt(10, 15);
-            //thirst -= getRandomInt(5, 10);//水分は水生成装置の故障中のみ減少
-            training -= getRandomInt(5, 10);
-            stress += getRandomInt(2, 5);
-
-            if(!(malfunctions.waterGen && malfunctionsDay.waterGen)){
-                thirst += 20; // 水生成装置が正常なら水分は回復
-            }
-
-            hunger = Math.max(0, hunger);
-            thirst = Math.max(0, thirst);
-            training = Math.max(0, training);
-
-            if (hunger === 0 || thirst === 0 || training === 0) {
-                health -= 10;
-                if (health < 0) health = 0;
-            }
-
             triggerRandomEvent(abnormalStatus, day); // イベント発生
+
+            if (!(malfunctions.comms || malfunctionsDay.comms)) {
+                const rand = Math.random();//ランダムな小数値
+                if (rand < 0.2) {
+                    stress -= 15;
+                    addEvent("📡 地球との通信に成功");
+                }
+            }
+
             updateDisplay(); // 画面表示更新
             updateResourceBars();
 
@@ -231,6 +253,13 @@ function nextDay() {
 
             // 故障状態の進行（次日への反映）
             malfunctionsDay = { ...malfunctions };
+
+            const eventLog = document.getElementById("event-messages");
+            if (eventLog) {
+                const li = document.createElement("li");//リストの追加
+                li.textContent = `【${day}日目】`;//日数を追加
+                eventLog.prepend(li);//作成した上記のリストをログの先頭に追加
+            }
 
             // 2. ボタンを再度有効化する
             nextDayButton.disabled = false;
@@ -269,7 +298,7 @@ function addSpaceYEvent(message) {
     const spaceyLog = document.getElementById("spacey-messages");
     if (spaceyLog) {
         const li = document.createElement("li");
-        li.textContent = `【${day+1}日目】${message}`;
+        li.textContent = `【${day + 1}日目】${message}`;
         spaceyLog.prepend(li); // ログの先頭に追加
     }
 }
@@ -339,7 +368,7 @@ function repairSystem(part) {
             break;
     }
 
-    addEvent(message);
+    addEvent(`(${day}日目)` + message);
     updateDisplay();
     updateResourceBars(); // 変更点: リソースバーの更新を呼び出し
 } // 変更点: ここまで修理関連関数
@@ -348,15 +377,18 @@ function repairSystem(part) {
 function triggerRandomEvent(abnormalStatus, day) {
     const rand = Math.random();//ランダムな小数値
     const bg = document.querySelector('.background'); // 背景要素を取得
+    let eventOccurred = false; // Add a flag to track if any event occurred
 
     if (rand < 0.03 || day == 2) {
         // 宇宙酔い（3%）または、2日目に強制発生
         addEvent("🚨 宇宙酔いが発生！めまいや嘔吐で体調不良。操作ミスが発生しやすくなります。");
         health -= 5;
         stress += 10;
+        malfunctions.Drunkenness = true;
         if (bg) {
             bg.style.backgroundImage = "url('image/spaceShip_Drunk.png')";
         }
+        eventOccurred = true; // An event occurred
     } else {
         if (bg) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
@@ -367,36 +399,51 @@ function triggerRandomEvent(abnormalStatus, day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            malfunctions.hullDamaged = true;
             if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
-        } else if (rand < 0.23) {
-            malfunctions.hullDamaged = true;
+            eventOccurred = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
-            if (type === 1) {
+            if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
                 malfunctions.comms = true;
-            } else if (type === 2) {
+                flag = true;
+                eventOccurred = true; // An event occurred
+            } else if (type === 2 && !(malfunctions.oxygen && malfunctionsDay.oxygen)) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
                 malfunctions.oxygen = true;
-            } else if (type === 3) {
+                flag = true;
+                eventOccurred = true; // An event occurred
+            } else if (type === 3 && !(malfunctions.waterGen && malfunctionsDay.waterGen)) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
                 malfunctions.waterGen = true;
-            } else {
+                flag = true;
+                eventOccurred = true; // An event occurred
+            } else if (type === 4 && !(malfunctions.fuel && malfunctionsDay.fuel)) {
                 addEvent("⛽️ 燃料タンク故障！このままだと火星にたどり着けるかわからない、、");
                 stress += 10;
                 malfunctions.fuel = true;
+                flag = true;
+                eventOccurred = true; // An event occurred
             }
-        } else {
-            addEvent("✅ 今日は特に異常なし。");
         }
     }
 
+    // If no specific event occurred, add the "no abnormalities" message
+    if (!eventOccurred) {
+        addEvent("✅ 今日は特に異常なし。");
+    }
+    if (!flag) {
+        addEvent("✅ 故障はありません。");
+    } else {
+        flag = false;
+    }
     // ステータスの限界値チェック
     if (health < 0) health = 0;
     if (thirst < 0) thirst = 0;
@@ -421,7 +468,7 @@ function addEvent(message) {
     const eventLog = document.getElementById("event-messages");
     if (eventLog) {
         const li = document.createElement("li");//リストの追加
-        li.textContent = `【${day}日目】${message}`;//日数を追加
+        li.textContent = `${message}`;//日数を追加
         eventLog.prepend(li);//作成した上記のリストをログの先頭に追加
     }
 }
