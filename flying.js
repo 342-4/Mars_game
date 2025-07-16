@@ -327,6 +327,7 @@ function repairSystem(part) {
     switch (part) {
         case "hullDamaged":
             message = "☄️ 船体を修理しました。";
+            bg.style.backgroundImage = "url('image/spaceShip.png')";
             break;
         case "comms":
             message = "📡 通信機を修理しました。";
@@ -370,29 +371,27 @@ function triggerRandomEvent(abnormalStatus, day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            malfunctions.hullDamaged = true;
             if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
-        } else if (rand < 0.23) {
-            malfunctions.hullDamaged = true;
         } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
-            if (type === 1) {
+            if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
                 malfunctions.comms = true;
-            } else if (type === 2) {
+            } else if (type === 2 && !(malfunctions.oxygen && malfunctionsDay.oxygen)) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
                 malfunctions.oxygen = true;
-            } else if (type === 3) {
+            } else if (type === 3 && !(malfunctions.waterGen && malfunctionsDay.waterGen)) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
                 malfunctions.waterGen = true;
-            } else {
+            } else if( type === 4 && !(malfunctions.fuel && malfunctionsDay.fuel)) {
                 addEvent("⛽️ 燃料タンク故障！このままだと火星にたどり着けるかわからない、、");
-                stress += 10;
                 malfunctions.fuel = true;
             }
         } else {
