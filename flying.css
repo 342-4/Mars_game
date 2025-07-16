@@ -1,44 +1,54 @@
 /* スクロールを無効にする */
-html, body {
-    overflow: hidden;
-    height: 100%;
+html,
+body {
+  overflow: hidden;
+  height: 100%;
 }
 
 
 body {
-    font-family: sans-serif;
-    text-align: center;
+  font-family: sans-serif;
+  text-align: center;
 }
+
 .background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-image: url(image/spaceShip.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-image: url(image/spaceShip.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: -1;
 }
 
 #astronaut {
-    position: fixed;    /*位置固定*/
-    bottom: 50px;       /* 画面下から120px上に配置（＝背景の左下から少し上） // 変更点 */
-    left: 40px;          /* 左端から少し内側へ // 変更点 */
-    width: 192px;        /* 元が64pxなので4倍（64 * 4）に拡大 // 変更点 */
-    height: auto;
-    image-rendering: pixelated; /* ピクセルアートのにじみ防止 */
-    z-index: 10;         /* 前面に表示 */
+  position: fixed;
+  /*位置固定*/
+  bottom: 50px;
+  /* 画面下から120px上に配置（＝背景の左下から少し上） // 変更点 */
+  left: 40px;
+  /* 左端から少し内側へ // 変更点 */
+  width: 192px;
+  /* 元が64pxなので4倍（64 * 4）に拡大 // 変更点 */
+  height: auto;
+  image-rendering: pixelated;
+  /* ピクセルアートのにじみ防止 */
+  z-index: 10;
+  /* 前面に表示 */
 }
+
 .buttons img {
-    width: 64px;
-    height: 64px;
-    cursor: pointer;
-    margin: 10px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  margin: 10px;
 }
 
 .buttons {
   /* 必要に応じて上側のボタンのスタイル */
-  margin-bottom: 1rem; /* リュックボタンの下に余白 */
+  margin-bottom: 1rem;
+  /* リュックボタンの下に余白 */
   text-align: center;
 }
 
@@ -47,7 +57,8 @@ body {
   font-weight: bold;
   font-size: 18px;
   color: #eee;
-  background: linear-gradient(145deg, #6a7b8a, #4d5a68); /* 控えめな青グレー */
+  background: linear-gradient(145deg, #6a7b8a, #4d5a68);
+  /* 控えめな青グレー */
   border: 2px solid #2f3b47;
   border-radius: 10px;
   padding: 10px 25px;
@@ -57,7 +68,8 @@ body {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.1s ease;
   user-select: none;
-  opacity: 0.85; /* 少し透明にして控えめな印象に */
+  opacity: 0.85;
+  /* 少し透明にして控えめな印象に */
 }
 
 .lower-buttons button:hover {
@@ -72,10 +84,12 @@ body {
 
 .lower-buttons {
   position: fixed;
-  bottom: 40px;   /* 画面下から40px上 */
+  bottom: 40px;
+  /* 画面下から40px上 */
   width: 100%;
   text-align: center;
-  margin-top: 0;  /* marginはリセット */
+  margin-top: 0;
+  /* marginはリセット */
 }
 
 
@@ -90,43 +104,45 @@ body {
 
 .bar-container {
   position: relative;
-    width: 200px;
-    height: 20px;
-    background-color: #ddd;
-    margin: 5px 0;
-    border-radius: 5px;
-    overflow: hidden;
+  width: 200px;
+  height: 20px;
+  background-color: #ddd;
+  margin: 5px 0;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 #astronaut.walking {
-    animation: walkRight 3s linear forwards;
+  animation: walkRight 3s linear forwards;
 }
 
 
 #screen-fade.active {
-    opacity: 1;
-    pointer-events: all;
-    transition: opacity 1s;
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 1s;
 }
 
 #screen-fade {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: black;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 999;
-    transition: opacity 1s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+  transition: opacity 1s;
 }
 
 
 .bar {
-    height: 100%;
-    width: 100%;
-    transition: width 0.3s ease;
-    z-index: 1;
-    position: relative;
+  height: 100%;
+  width: 100%;
+  transition: width 0.3s ease;
+  z-index: 1;
+  position: relative;
 }
 
 .bar-threshold {
@@ -154,11 +170,14 @@ body {
   width: 180px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
 /*酸素と燃料の数値の色を固定*/
-#oxygen, #fuel {
+#oxygen,
+#fuel {
   color: white !important;
   opacity: 1 !important;
-  font-weight: bold; /* お好みで */
+  font-weight: bold;
+  /* お好みで */
 }
 
 
@@ -196,22 +215,25 @@ body {
 
 
 .day-display {
-    background-color: rgba(128, 0, 128, 0.8); /* 透過率60%（かなり濃い） */
+  background-color: rgba(128, 0, 128, 0.8);
+  /* 透過率60%（かなり濃い） */
 
-    border: 2px solid #a050f0; /* 明るめ紫の枠線 */
-    border-radius: 12px;
-    padding: 12px 20px;
-    margin: 20px;
-    display: inline-block;
-    box-shadow: 2px 2px 6px rgba(160, 100, 255, 0.5);
-    font-family: 'Segoe UI', sans-serif;
-    animation: glow-purple 3s infinite;
+  border: 2px solid #a050f0;
+  /* 明るめ紫の枠線 */
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 20px;
+  display: inline-block;
+  box-shadow: 2px 2px 6px rgba(160, 100, 255, 0.5);
+  font-family: 'Segoe UI', sans-serif;
+  animation: glow-purple 3s infinite;
 }
 
 .day-display h2 {
-    color: #d4aaff; /* 明るめの文字色で読みやすく */
-    font-size: 1.8em;
-    margin: 0;
+  color: #d4aaff;
+  /* 明るめの文字色で読みやすく */
+  font-size: 1.8em;
+  margin: 0;
 }
 
 #meal-list {
@@ -219,7 +241,7 @@ body {
   gap: 15px;
   padding: 0;
   list-style: none;
-  justify-content: center; 
+  justify-content: center;
 }
 
 #meal-list li {
@@ -230,143 +252,178 @@ body {
 
 /* 紫に光るアニメーション */
 @keyframes glow-purple {
-    0% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
-    50% { box-shadow: 0 0 15px rgba(200, 150, 255, 0.9); }
-    100% { box-shadow: 0 0 5px rgba(180, 120, 255, 0.5); }
+  0% {
+    box-shadow: 0 0 5px rgba(180, 120, 255, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(200, 150, 255, 0.9);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(180, 120, 255, 0.5);
+  }
 }
 
 
 
 /* イベントログ */
 .event-log {
-    position: fixed;
-    top: 10px; /* 画面上部からの位置 */
-    right: 10px;
-    width: 250px; /* 変更: 幅を250pxに統一 */
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒い背景 */
-    border: 1px solid #fff;
-    border-radius: 8px;
-    padding: 10px;
-    color: #fff;
-    font-size: 0.9em;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    max-height: 250px; /* 初期表示の高さ */
-    transition: max-height 0.3s ease;
+  position: fixed;
+  top: 10px;
+  /* 画面上部からの位置 */
+  right: 10px;
+  width: 250px;
+  /* 変更: 幅を250pxに統一 */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* 半透明の黒い背景 */
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
+  font-size: 0.9em;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  max-height: 250px;
+  /* 初期表示の高さ */
+  transition: max-height 0.3s ease;
 }
 
 /* SpaceYログのスタイル */
 #spacey-log {
-    position: fixed;
-    top: 270px; /* 変更: イベントログの下に配置するための位置調整 */
-    right: 10px;
-    width: 250px; /* 変更: イベントログと同じ幅に調整 */
-    max-height: 200px;
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid #00ffff;
-    border-radius: 8px;
-    padding: 10px;
-    color: #00ffff;
-    font-size: 0.9em;
-    overflow-y: auto;
-    z-index: 900;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  position: fixed;
+  top: 270px;
+  /* 変更: イベントログの下に配置するための位置調整 */
+  right: 10px;
+  width: 250px;
+  /* 変更: イベントログと同じ幅に調整 */
+  max-height: 200px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid #00ffff;
+  border-radius: 8px;
+  padding: 10px;
+  color: #00ffff;
+  font-size: 0.9em;
+  overflow-y: auto;
+  z-index: 900;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
 #spacey-log h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #00ffff;
-    text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #00ffff;
+  text-align: center;
 }
 
 #spacey-log ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 #spacey-log ul li {
-    margin-bottom: 5px;
-    padding-left: 5px;
-    border-left: 2px solid #00ffff;
+  margin-bottom: 5px;
+  padding-left: 5px;
+  border-left: 2px solid #00ffff;
 }
 
 /* 展開されたとき（全ログ表示） */
 .event-log.expanded {
-    max-height: 300px;
-    overflow-y: auto;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 #toggle-log {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    font-size: 16px;
-    cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 
 
 .status-container {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    text-align: left;
-    background-color:#f0f0f0;
-    padding: 10px;
-    border-radius: 10px;
-    z-index: 1000;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  text-align: left;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1000;
 }
 
 .status-bar {
-    margin-bottom: 10px;
-    font-size: 14px;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
 
-.red {background-color: red;}
-.orange {background-color: orange;}
-.blue {background-color: deepskyblue;}
-.green {background-color: seagreen;}
-.purple {background-color: purple;}
+.red {
+  background-color: red;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.blue {
+  background-color: deepskyblue;
+}
+
+.green {
+  background-color: seagreen;
+}
+
+.purple {
+  background-color: purple;
+}
 
 .summary {
-    margin-top: 30px;
-    clear: both; /* 追加 */
-    text-align: center;
+  margin-top: 30px;
+  clear: both;
+  /* 追加 */
+  text-align: center;
 }
 
 
 
 /* 宇宙飛行士の移動アニメーション // 変更点 */
 @keyframes walkRight {
-    0% {
-        left: 40px;
-    }
-    100% {
-        left: 110%; /* 画面右端の外に出るまで移動 */
-    }
+  0% {
+    left: 40px;
+  }
+
+  100% {
+    left: 110%;
+    /* 画面右端の外に出るまで移動 */
+  }
 }
 
 .walking {
-    animation: walkRight 3s linear forwards; /* 3秒で右へ移動 // 変更点 */
+  animation: walkRight 3s linear forwards;
+  /* 3秒で右へ移動 // 変更点 */
 }
 
 #event-messages {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
 }
+
 /* 元の固定位置を無効化 */
 #bag-button {
-  position: static; /* ← fixedから変更 */
+  position: static;
+  /* ← fixedから変更 */
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  margin: 10px; /* 他のボタンと同じマージン */
+  margin: 10px;
+  /* 他のボタンと同じマージン */
   vertical-align: middle;
 }
 
@@ -389,16 +446,20 @@ body {
   align-items: center;
   z-index: 999;
 }
+
 .modal.hidden {
   display: none;
 }
+
 .modal-overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* 薄暗い背景 */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* 薄暗い背景 */
   z-index: 998;
 }
+
 .modal-content {
   position: relative;
   background: #111;
@@ -410,8 +471,10 @@ body {
   z-index: 999;
   text-align: center;
 
-  max-height: 80vh;         /* 画面の80%以内の高さに制限 */
-  overflow-y: auto;         /* 内容が多いとき縦スクロール */
+  max-height: 80vh;
+  /* 画面の80%以内の高さに制限 */
+  overflow-y: auto;
+  /* 内容が多いとき縦スクロール */
 }
 
 #item-list {
@@ -420,12 +483,14 @@ body {
   gap: 10px;
   margin-top: 20px;
 }
+
 .item {
   background: black;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
 }
+
 .item img.item-image {
   width: 80px;
   height: 80px;
@@ -433,6 +498,7 @@ body {
   display: block;
   margin: 0 auto 10px auto;
 }
+
 /* 修理モーダル */
 #repair-modal {
   position: fixed;
@@ -446,18 +512,21 @@ body {
   align-items: center;
   z-index: 1000;
 }
+
 #repair-modal.hidden {
   display: none;
 }
+
 #repair-modal .modal-content {
   background-color: #111;
   color: #eee;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-    z-index: 1001;
+  z-index: 1001;
   position: relative;
 }
+
 #repair-options {
   display: flex;
   gap: 20px;
@@ -478,6 +547,7 @@ body {
   height: 64px;
   margin-bottom: 5px;
 }
+
 /* 修理確認モーダル（上に表示される） */
 #repair-confirm {
   position: fixed;
@@ -485,11 +555,13 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75); /* 背景をやや濃く */
+  background-color: rgba(0, 0, 0, 0.75);
+  /* 背景をやや濃く */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1100; /* repair-modal より上に設定 */
+  z-index: 1100;
+  /* repair-modal より上に設定 */
 }
 
 #repair-confirm .modal-content {
@@ -502,36 +574,39 @@ body {
   width: 80%;
   z-index: 1101;
 }
+
 #repair-confirm.hidden {
   display: none;
 }
+
 /* flying.css */
 
 /* ... 既存のCSSコード ... */
 
 /* 「次の日へ」ボタンのスタイル */
 .next-day-button {
-    font-size: 32px;
-    padding: 10px; /* ここは「10px px」ではなく「10px」のみでOK */
-    border: none;
-    border-radius: 8px;
-    background-color: #4CAF50; /* 緑色 */
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: -45px; /* 必要に応じて調整してください */
+  font-size: 32px;
+  padding: 10px;
+  /* ここは「10px px」ではなく「10px」のみでOK */
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  /* 緑色 */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: -45px;
+  /* 必要に応じて調整してください */
 }
 
 .next-day-button:hover {
-    background-color: #45a049; /* ホバー時の緑色 */
-    transform: translateY(-2px);
+  background-color: #45a049;
+  /* ホバー時の緑色 */
+  transform: translateY(-2px);
 }
 
 .next-day-button:active {
-    transform: translateY(1px);
-    box-shadow: none;
+  transform: translateY(1px);
+  box-shadow: none;
 }
-
-    
-

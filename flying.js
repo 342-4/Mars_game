@@ -626,7 +626,7 @@ function train() {
     if (hunger < 20 || thirst < 20 || health < 10) {
         alert("体力・空腹・水分が足りません！！！");
         return;
-    }else if(training >= 50){
+    } else if (training >= 50) {
         alert("トレーニングはこれ以上できません。");
         return;
     }
