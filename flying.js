@@ -205,6 +205,9 @@ function nextDay() {
 
             if(!(malfunctions.waterGen && malfunctionsDay.waterGen)){
                 thirst += 20; // 水生成装置が正常なら水分は回復
+                if(thirst > 100) {
+                    thirst = 100; // 水分は最大100)
+                }
             }
 
             hunger = Math.max(0, hunger);
