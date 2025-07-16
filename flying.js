@@ -17,6 +17,8 @@ let malfunctions = {
 const maxFuel = 100;
 const maxOxygen = 100;
 
+const bg = document.querySelector('.background'); // 背景要素を取得
+
 // 現在の燃料と酸素も100スタート（変化させる場合は変数で管理）
 let currentFuel = 100;
 let currentOxygen = 100;
