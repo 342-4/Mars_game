@@ -173,7 +173,6 @@ function nextDay() {
 
             // ステータスの減少
             hunger -= getRandomInt(10, 15);
-            //thirst -= getRandomInt(5, 10);//水分は水生成装置の故障中のみ減少
             training -= getRandomInt(5, 10);
             stress += getRandomInt(2, 5);
 
@@ -232,8 +231,13 @@ function nextDay() {
             }
             triggerRandomEvent(abnormalStatus, day); // イベント発生
 
-
-
+            if (!(malfunctions.comms || malfunctionsDay.comms)) {
+                const rand = Math.random();//ランダムな小数値
+                if (rand < 0.2) {
+                    stress -= 15;
+                    addEvent("📡 地球との通信に成功");
+                }
+            }
 
             updateDisplay(); // 画面表示更新
             updateResourceBars();
@@ -395,6 +399,7 @@ function triggerRandomEvent(abnormalStatus, day) {
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            malfunctions.hullDamaged = true;
             if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
@@ -402,7 +407,7 @@ function triggerRandomEvent(abnormalStatus, day) {
         } else if (rand < 0.8) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
-            if (type === 1) {
+            if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
                 malfunctions.comms = true;
