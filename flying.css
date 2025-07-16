@@ -154,6 +154,13 @@ body {
   width: 180px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+/*酸素と燃料の数値の色を固定*/
+#oxygen, #fuel {
+  color: white !important;
+  opacity: 1 !important;
+  font-weight: bold; /* お好みで */
+}
+
 
 /* 🔽 各ステータスブロックの間隔 */
 .bottom-right-status .status-block {
