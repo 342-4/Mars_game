@@ -18,6 +18,11 @@ const maxFuel = 100;
 const maxOxygen = 100;
 
 const bg = document.querySelector('.background'); // 背景要素を取得
+const soundEffect = document.getElementById("soundEffect"); // 効果音のaudio要素を取得
+const recoverySound = document.getElementById("recoverySound"); // 回復音のaudio要素を取得
+const nextDaySound = document.getElementById("nextDaySound"); // 23.mp3用のaudio要素を取得
+const runSound = document.getElementById("runSound"); // run.mp3用のaudio要素を取得
+const repairSound = document.getElementById("repairSound"); // ★追加：repair.mp3用のaudio要素を取得
 
 // 現在の燃料と酸素も100スタート（変化させる場合は変数で管理）
 let currentFuel = 100;
@@ -55,6 +60,54 @@ const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;//所持している合計重量保持
 const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア // 修正点: 目標日数を15〜19日に変更
 localStorage.setItem("goalDay", goalDay);
+
+// 効果音を再生する関数
+function playSound() {
+    if (soundEffect) {
+        soundEffect.currentTime = 0; // 再生位置を先頭に戻す
+        soundEffect.play().catch(e => console.error("Sound play failed:", e)); // エラーハンドリングを追加
+    }
+}
+
+// 回復音を再生する関数
+function playRecoverySound() {
+    if (recoverySound) {
+        recoverySound.currentTime = 0; // 再生位置を先頭に戻す
+        recoverySound.play().catch(e => console.error("Recovery sound play failed:", e)); // エラーハンドリングを追加
+    }
+}
+
+// 次の日へボタンの効果音を再生する関数
+function playNextDaySound() {
+    if (nextDaySound) {
+        nextDaySound.currentTime = 0;
+        nextDaySound.play().catch(e => console.error("Next Day sound play failed:", e));
+    }
+}
+
+// ランニング音を再生する関数
+function playRunSound() {
+    if (runSound) {
+        runSound.currentTime = 0; // 再生位置を先頭に戻す
+        runSound.play().catch(e => console.error("Run sound play failed:", e));
+    }
+}
+
+// ランニング音を停止する関数
+function stopRunSound() {
+    if (runSound) {
+        runSound.pause();
+        runSound.currentTime = 0;
+    }
+}
+
+// ★追加：修理音を再生する関数
+function playRepairSound() {
+    if (repairSound) {
+        repairSound.currentTime = 0; // 再生位置を先頭に戻す
+        repairSound.play().catch(e => console.error("Repair sound play failed:", e));
+    }
+}
 
 //画面表示更新関数
 function updateDisplay() {
@@ -96,8 +149,8 @@ function checkAbnormalStatus() {
 
 //ゲームオーバー判定
 function checkGameOver() {
-    checkAbnormalStatus();  //異常状態を記録
-    localStorage.setItem("finalDay", day);  //日数を保存
+    checkAbnormalStatus();    //異常状態を記録
+    localStorage.setItem("finalDay", day);    //日数を保存
 
     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
 
@@ -137,16 +190,22 @@ function nextDay() {
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
 
+    // まずnextDaySoundを再生
+    playNextDaySound();
+
     // 宇宙飛行士のアニメーションをリセットし、再開
-    // 既存のコードにある void astronaut.offsetWidth; は、リフローを強制してアニメーションを再トリガーする手法です。
-    // 今回はクラスの付け外しで対応するので不要、またはアニメーションがスムーズでない場合に検討。
     astronaut.classList.remove("walking");
     void astronaut.offsetWidth; // 強制再描画
     astronaut.classList.add("walking");
 
+    // runSoundを再生（アニメーション開始と同期）
+    playRunSound();
+
+
     // アニメーションが終了するまでの時間を考慮し、画面暗転を遅延させる (CSSアニメーション: 3s)
     setTimeout(() => {
         fade.classList.add("active"); // 暗転開始 (CSSトランジション: 1s)
+        stopRunSound(); // 画面暗転と同時にrunSoundを停止
 
         // 画面暗転アニメーションが終了するまでの時間を考慮し、日次処理とページ遷移をさらに遅延させる
         setTimeout(() => {
@@ -617,7 +676,6 @@ function eat(n) {
     updateDisplay();         // ステータス更新
     updateMealQuantities(); // 食事モーダル更新
     renderItems();           // 所持品モーダル更新
-
 }
 
 //トレーニング処理
@@ -730,7 +788,7 @@ function closeBag() {
 // 食事モーダル表示
 function openMeal() {
     document.getElementById("meal-modal").classList.remove("hidden");
-    updateMealQuantities();  // ← これを必ず呼ぶ
+    updateMealQuantities();    // ← これを必ず呼ぶ
 }
 
 // 食事モーダル非表示
