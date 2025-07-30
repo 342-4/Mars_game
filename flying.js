@@ -33,6 +33,17 @@ let malfunctionsDay = {
 
 let flag = false;// 故障が続いているかのフラグ
 
+// flying.js (グローバルスコープ、既存の変数定義の近くに追加)
+const itemWeights = {
+    '加水食品': 5,
+    '缶詰': 10,
+    '半乾燥食品': 5,
+    '酸素ボンベ': 20,
+    '修理キット': 8,
+    '燃料缶': 20,
+    '水': 1
+};
+
 const spaceYDay = 27;
 let lastSpaceYLogDay = 0;
 
@@ -57,7 +68,7 @@ function updateDisplay() {
     document.getElementById("health-bar").style.width = `${health}%`;
     document.getElementById("hunger-bar").style.width = `${hunger}%`;
     document.getElementById("thirst-bar").style.width = `${thirst}%`;
-    document.getElementById("training-bar").style.width = `${training*2}%`;
+    document.getElementById("training-bar").style.width = `${training * 2}%`;
     document.getElementById("stress-bar").style.width = `${stress}%`;
 
     updateHealthHighlight();
@@ -90,7 +101,7 @@ function checkGameOver() {
 
     const goalDay = parseInt(localStorage.getItem("goalDay") || "30");
 
-    if (health <= 0|| currentOxygen <= 0 || currentFuel <= 0) {
+    if (health <= 0 || currentOxygen <= 0 || currentFuel <= 0) {
         // 失敗 → deathCount を1増やす
         let deathCount = parseInt(localStorage.getItem("deathCount")) || 0;
         deathCount++;
@@ -207,6 +218,7 @@ function nextDay() {
                 hunger -= 10;
                 thirst -= 10;
                 addEvent("☄️ 船体損傷が続いています。修理が必要です！");
+                bg.style.backgroundImage = "url('image/spaceShip_meteo.png')";
                 flag = true; // 船体損傷が続いている場合はフラグを立てる
             }
             if (malfunctions.comms && malfunctionsDay.comms) {
@@ -377,7 +389,8 @@ function repairSystem(part) {
 function triggerRandomEvent(abnormalStatus, day) {
     const rand = Math.random();//ランダムな小数値
     const bg = document.querySelector('.background'); // 背景要素を取得
-    let eventOccurred = false; // Add a flag to track if any event occurred
+    let eventOccurred = false;
+
 
     if (rand < 0.03 || day == 2) {
         // 宇宙酔い（3%）または、2日目に強制発生
@@ -388,54 +401,119 @@ function triggerRandomEvent(abnormalStatus, day) {
         if (bg) {
             bg.style.backgroundImage = "url('image/spaceShip_Drunk.png')";
         }
-        eventOccurred = true; // An event occurred
+        eventOccurred = true;
+        malfunctions.Drunkenness = true;
     } else {
         if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.05) {
+        if (rand < 0.08 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
             // 隕石衝突（5%）
-            addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
             thirst -= 10;
             hunger -= 10;
+            let cargo = JSON.parse(localStorage.getItem('cargo')) || []; // 現在の所持品をLocalStorageから取得
+            let currentTotalWeight = parseFloat(localStorage.getItem('currentWeight')) || 0; // 現在の総重量を取得
+
+            const maxItemLossTypes = 3; // 最大で失われるアイテムの種類の数
+            const itemsToPotentiallyLose = [
+                '加水食品', '缶詰', '半乾燥食品', '水', '修理キット'
+            ];
+
+            let itemsLostCount = 0;
+            let lossMessage = "以下の物資を失いました：";
+            let anyLoss = false;
+
+            // アイテムのリストをシャッフルし、ランダムに選択されるようにする
+            itemsToPotentiallyLose.sort(() => Math.random() - 0.5);
+
+            for (let i = 0; i < itemsToPotentiallyLose.length && itemsLostCount < maxItemLossTypes; i++) {
+                const itemName = itemsToPotentiallyLose[i];
+                const itemIndexInCargo = cargo.findIndex(item => item.name === itemName);
+
+                if (itemIndexInCargo !== -1 && cargo[itemIndexInCargo].quantity > 0) {
+                    const itemInCargo = cargo[itemIndexInCargo];
+                    const lossAmount = getRandomInt(1, Math.min(itemInCargo.quantity, 3)); // 1から3個、または現在の所持数の少ない方を損失量とする
+
+                    itemInCargo.quantity -= lossAmount; // 所持数を減らす
+                    currentTotalWeight -= (itemWeights[itemName] || 0) * lossAmount; // 総重量も減らす（存在しないアイテムの重量は0とみなす）
+                    lossMessage += ` ${itemName} x${lossAmount}個、`;
+                    itemsLostCount++;
+                    anyLoss = true;
+                }
+            }
+
+            if (anyLoss) {
+                lossMessage = lossMessage.slice(0, -1); // 最後の読点を削除
+                addEvent(`📦 ${lossMessage}`);
+            } else {
+                addEvent("📦 幸いなことに、物資の大きな損失はありませんでした。");
+            }
+
+            // 更新された所持品と総重量をLocalStorageに保存
+            localStorage.setItem('cargo', JSON.stringify(cargo));
+            localStorage.setItem('currentWeight', currentTotalWeight.toString());
+
+            // 画面表示を更新
+            updateMealQuantities(); // 食料・水の残数を更新
+            document.getElementById("current-weight").textContent = currentTotalWeight; // 表示されている総重量を更新
+
+            // もし所持品モーダルが開いている場合は再描画する
+            const bagModal = document.getElementById('bag-modal');
+            if (bagModal && !bagModal.classList.contains('hidden')) {
+                renderItems(); // chooseItem.jsの関数を呼び出し、所持品リストを更新
+            }
+            // 修正: 所持品モーダルの内容をすぐに更新するために、renderItems()を無条件に呼び出す
+            renderItems(); // この行を追加して、所持品モーダルの内容をすぐに更新します
+
+            const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
+
+            // savedCargo の内容を items に反映
+            savedCargo.forEach(savedItem => {
+                const match = items.find(item => item.name === savedItem.name);
+                if (match) {
+                    match.quantity = savedItem.quantity;
+                }
+            });
+
             malfunctions.hullDamaged = true;
+            addEvent("☄️ 隕石が船体に衝突！修理が必要です！");
             if (bg) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
             eventOccurred = true;
-        } else if (rand < 0.5) {
-            // 機器の故障
-            const type = getRandomInt(1, 4); // 1から4に変更 // 
+            flag = true;
+        } else if (rand < 0.8) {
+            // 機器の故障（15%）
+            const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
             if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
                 malfunctions.comms = true;
                 flag = true;
-                eventOccurred = true; // An event occurred
+                eventOccurred = true;
             } else if (type === 2 && !(malfunctions.oxygen && malfunctionsDay.oxygen)) {
                 addEvent("🔧 酸素供給装置が故障！体調悪化に注意。");
                 health -= 10;
                 malfunctions.oxygen = true;
                 flag = true;
-                eventOccurred = true; // An event occurred
+                eventOccurred = true;
             } else if (type === 3 && !(malfunctions.waterGen && malfunctionsDay.waterGen)) {
                 addEvent("🚱 水生成装置が故障！水分確保が困難に。");
                 thirst -= 15;
                 malfunctions.waterGen = true;
                 flag = true;
-                eventOccurred = true; // An event occurred
+                eventOccurred = true;
             } else if (type === 4 && !(malfunctions.fuel && malfunctionsDay.fuel)) {
                 addEvent("⛽️ 燃料タンク故障！このままだと火星にたどり着けるかわからない、、");
                 stress += 10;
                 malfunctions.fuel = true;
                 flag = true;
-                eventOccurred = true; // An event occurred
+                eventOccurred = true;
             }
         }
     }
 
-    // If no specific event occurred, add the "no abnormalities" message
     if (!eventOccurred) {
         addEvent("✅ 今日は特に異常なし。");
     }
@@ -443,6 +521,14 @@ function triggerRandomEvent(abnormalStatus, day) {
         addEvent("✅ 故障はありません。");
     } else {
         flag = false;
+    }
+
+    if (malfunctions.hullDamaged) {
+        bg.style.backgroundImage = "url('image/spaceShip_meteo.png')";
+    } else if (malfunctions.Drunkenness) {
+        bg.style.backgroundImage = "url('image/spaceShip_drunk.png')";
+    } else {
+        bg.style.backgroundImage = "url('image/spaceShip.png')";
     }
     // ステータスの限界値チェック
     if (health < 0) health = 0;
@@ -540,6 +626,9 @@ function train() {
     if (hunger < 20 || thirst < 20 || health < 10) {
         alert("体力・空腹・水分が足りません！！！");
         return;
+    } else if (training >= 50) {
+        alert("トレーニングはこれ以上できません。");
+        return;
     }
     health -= 5;
     hunger -= 10;
@@ -584,11 +673,11 @@ function updateResourceBars() {
 const itemList = document.getElementById("item-list");
 const currentWeightText = document.getElementById("current-weight");
 const statusDescriptions = {
-  "health": "体力：低下すると行動が制限され、ゼロでゲームオーバーになります。",
-  "hunger": "空腹：食事で回復。低いと体力が減少します。",
-  "thirst": "水分：水を飲んで回復。低いと健康に影響が出ます。",
-  "training": "トレーニング：筋肉量を表します。体力増加に影響します。",
-  "stress": "ストレス：100になると到着困難。",
+    "health": "体力：低下すると行動が制限され、ゼロでゲームオーバーになります。",
+    "hunger": "空腹：食事で回復。低いと体力が減少します。",
+    "thirst": "水分：水を飲んで回復。低いと健康に影響が出ます。",
+    "training": "トレーニング：筋肉量を表します。体力増加に影響します。",
+    "stress": "ストレス：100になると到着困難。",
 };
 
 
@@ -680,14 +769,14 @@ const itemDescriptions = {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  const foodItems = document.querySelectorAll('#meal-list li');
-  foodItems.forEach(item => {
-    const img = item.querySelector('img');
-    const name = img.alt;
-    if (itemDescriptions[name]) {
-      img.title = itemDescriptions[name];
-    }
-  });
+    const foodItems = document.querySelectorAll('#meal-list li');
+    foodItems.forEach(item => {
+        const img = item.querySelector('img');
+        const name = img.alt;
+        if (itemDescriptions[name]) {
+            img.title = itemDescriptions[name];
+        }
+    });
 });
 
 

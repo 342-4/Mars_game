@@ -4,6 +4,7 @@ const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;
 document.getElementById("weight-limit").textContent = weightLimit;
 //最大積載量をリセットするときに使う
+<<<<<<< HEAD
 //localStorage.removeItem("deathCount");
 
 //アイテムの定義
@@ -15,6 +16,23 @@ const items = [
     { name: '修理キット', weight: 5, quantity: 0, image: "image/repairKit.png"},
     { name: '燃料缶', weight: 10, quantity: 0, image:"image/fuelcan.png" },
     { name: '水', weight: 1, quantity: 0, image: "image/water.png"},
+=======
+localStorage.removeItem("deathCount");
+// --- 効果音の読み込み ---
+const selectSound = new Audio('image/select.mp3'); // ① 効果音ファイルを読み込む
+const shuppatsuSound = new Audio('image/出発.mp3'); // ① 出発.mp3 ファイルを読み込む
+const rocketSound = new Audio('image/ロケット.mp3');
+// 必要であれば音量調整
+//アイテムの定義
+const items = [
+    { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
+    { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
+    { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food2.png" },
+    { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
+    { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
+    { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
+    { name: '水', weight: 1, quantity: 0, image: "image/water.png" },
+>>>>>>> 79c530fbd7be33ca192be5db87b72f1d7e65036b
 ];
 const itemDescriptions = {
     '加水食品': '加水してすぐ食べられる便利な食品。ご飯類や麺類空腹が10回復する',
@@ -63,13 +81,34 @@ function changeItem(index, delta) {
     item.quantity = newQuantity;
     currentWeight = newWeight;
     currentWeightText.textContent = currentWeight;
+
+    // --- 効果音の再生 ---
+    if (delta > 0) { // ② '+'ボタンが押されたときのみ再生
+        selectSound.currentTime = 0; // ③ 再生位置をリセット（連続で鳴らすため）
+        selectSound.play().catch(e => console.error("効果音再生エラー:", e)); // ④ 効果音を再生
+    }
+    if (delta > 0) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(e => console.error("効果音再生エラー:", e));
+    }
     renderItems();
 }
 
+
 //次の場面に移行
 function startMission() {
+    // 「出発」ボタンの効果音を再生
+    shuppatsuSound.currentTime = 0;
+    shuppatsuSound.play().catch(e => console.error("出発効果音再生エラー:", e));
+
     const summary = items.map(item => `${item.name}×${item.quantity}`).join(', ');
+
+    // alertが閉じられた直後にロケット効果音を再生するために、alertの後に配置
     alert("出発準備完了！\n選んだ物資:\n" + summary + `\n合計重量: ${currentWeight}kg`);
+
+    // ★変更: alertが閉じられた直後にロケット効果音を再生するように移動
+    rocketSound.currentTime = 0;
+    rocketSound.play().catch(e => console.error("ロケット効果音再生エラー:", e));
 
     //：次の画面にデータを渡したい場合
     localStorage.setItem('cargo', JSON.stringify(items));
@@ -81,11 +120,11 @@ function startMission() {
     const interval = setInterval(() => {
         positionY -= 5;
         backgroundEl.style.backgroundPosition = `center ${positionY}px`;
-        if (positionY <= -1024){
+        if (positionY <= -1024) {
             clearInterval(interval);
             location.href = "flying.html" //game.htmlに移る
         }
     }, 30);
 }
-//
+
 renderItems();
