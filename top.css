@@ -32,7 +32,7 @@ button {
     font-weight: bold;
     border: none;
     border-radius: 10px;
-    background-color:black;
+    background-color: black;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -43,10 +43,16 @@ button:hover {
 }
 
 .description-text {
-    color: #a0e0ff; /* 説明文は少し青みがかった白で、未来的な雰囲気に */
-    font-size: 1.15rem; /* 読みやすいサイズに調整 */
-    line-height: 1.8; /* 行間を広げて、文章全体の可読性を向上 */
-    margin: 30px auto 40px auto; /* 上下の余白と左右中央寄せで、他の要素とのバランスを取る */
-    font-family: 'Arial', sans-serif; /* 読みやすさを重視したフォント。必要に応じて他のフォントも検討可 */
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3); /* テキストに微かな光（グロー）効果を追加 */
+    color: #a0e0ff;
+    /* 説明文は少し青みがかった白で、未来的な雰囲気に */
+    font-size: 1.15rem;
+    /* 読みやすいサイズに調整 */
+    line-height: 1.8;
+    /* 行間を広げて、文章全体の可読性を向上 */
+    margin: 30px auto 40px auto;
+    /* 上下の余白と左右中央寄せで、他の要素とのバランスを取る */
+    font-family: 'Arial', sans-serif;
+    /* 読みやすさを重視したフォント。必要に応じて他のフォントも検討可 */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    /* テキストに微かな光（グロー）効果を追加 */
 }

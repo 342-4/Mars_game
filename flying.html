@@ -2,240 +2,189 @@
 <html lang="ja">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <title>火星シミュレーション</title>
-    <link rel="stylesheet" href="flying.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>火星シミュレーション</title>
+  <link rel="stylesheet" href="flying.css">
 </head>
 
-<body class = "background">
-    <div class="day-display">
-        <h2>日数: <span id="day">1</span> 日目</h2>
-    </div>
-    <img id="astronaut" src="image/man.png" alt="宇宙飛行士">
+<body class="background">
+  <audio id="bgm" src="image/bgm.mp3" autoplay loop></audio>
+  <audio id="soundEffect" src="image/31.mp3"></audio>
+  <audio id="recoverySound" src="image/kaifuku.mp3"></audio>
+  <audio id="nextDaySound" src="image/23.mp3"></audio>
+  <audio id="runSound" src="image/run.mp3" loop></audio>
+  <audio id="repairSound" src="image/repair.mp3"></audio> <div class="day-display">
+    <h2>日数: <span id="day">1</span> 日目</h2>
+  </div>
+  <div class="buttons" style="margin: 10px 0;">
+    <button id="bag-button" title="所持品を見る">
+      <img src="image/backpack.png" alt="バック" class="bag-icon" style="width:48px; height:48px;">
+    </button>
+  </div>
 
-    <div class="status-container">
-        <div class="status-bar">
-            <div>
-                体力: <span id="health">100</span>
-                <span id="abnormal-status" class="abnormal-status"></span>
-            </div>
-            <div class="bar-container">
-                <div id="health-bar" class="bar red"></div>        
-            </div>
-            空腹: <span id="hunger">100</span>
-            <div class="bar-container">
-                <div class="bar-threshold-inside"></div>
-                <div id="hunger-bar" class="bar orange"></div>
-            </div>
-            水分: <span id="thirst">100</span>
-            <div class="bar-container">
-                <div class="bar-threshold-inside"></div>
-                <div id="thirst-bar" class="bar blue"></div>
-            </div>
-            トレーニング: <span id="training">0</span>
-            <div class="bar-container">
-                <div id="training-bar" class="bar green"></div>
-            </div>
-            ストレス: <span id="stress">0</span>
-            <div class="bar-container">
-                <div id="stress-bar" class="bar purple"></div>
-            </div>
-        </div>
+  <div class="summary" style="margin-top: 10px;">
+    <button onclick="nextDay()" class="next-day-button">次の日へ</button>
+  </div>
+  </div>
+
+
+  <img id="astronaut" src="image/man.png" alt="宇宙飛行士">
+
+  <div class="status-container">
+    <div class="status-bar">
+      <div>
+        体力: <span id="health" title="体力：低下すると行動が制限され、ゼロでゲームオーバーになります。">100</span>
+        <span id="abnormal-status" class="abnormal-status"></span>
+      </div>
+      <div class="bar-container">
+        <div id="health-bar" class="bar red"></div>
+      </div>
+
+      空腹: <span id="hunger" title="空腹：食事で回復。低いと体力が減少します。">100</span>
+      <div class="bar-container">
+        <div class="bar-threshold-inside"></div>
+        <div id="hunger-bar" class="bar orange"></div>
+      </div>
+
+      水分: <span id="thirst" title="水分：水を飲んで回復。低いと健康に影響が出ます。">100</span>
+      <div class="bar-container">
+        <div class="bar-threshold-inside"></div>
+        <div id="thirst-bar" class="bar blue"></div>
+      </div>
+
+      トレーニング: <span id="training" title="トレーニング：筋肉量を表します。体力増加に影響します。">0</span>
+      <div class="bar-container">
+        <div id="training-bar" class="bar green"></div>
+      </div>
+
+      ストレス: <span id="stress" title="ストレス：高いと効率が悪化します。休息などで軽減可能。">0</span>
+      <div class="bar-container">
+        <div id="stress-bar" class="bar purple"></div>
+      </div>
     </div>
 
-    <!-- 酸素＆ガソリンバー（右下） -->
-<div class="bottom-right-status">
-    <div class="status-block">
+
+
+
+    <div class="bottom-right-status">
+      <div class="status-block" title="酸素：呼吸に必要。減ると行動が制限されます。">
         酸素: <span id="oxygen"></span>
         <div class="bar-container">
-            <div id="oxygen-bar" class="bar cyan"style="width: 100%"></div>
+          <div id="oxygen-bar" class="bar cyan" style="width: 100%"></div>
         </div>
-    </div>
-    <div class="status-block">
+      </div>
+
+      <div class="status-block" title="燃料：宇宙船の動力源。減ると移動不可になります。">
         ガソリン: <span id="fuel"></span>
         <div class="bar-container">
-            <div id="fuel-bar" class="bar yellow"style="width: 100%"></div>
+          <div id="fuel-bar" class="bar yellow" style="width: 100%"></div>
         </div>
+      </div>
     </div>
-</div>
 
-   
-    <div class="buttons">
-        <button id="bag-button" title="所持品を見る">
-            <img src="image/backpack.png" alt="バック" class="bag-icon">
-        </button>
-    </div>
+
+
 
     <div class="buttons lower-buttons">
-        <button onclick="openMeal()" title="食事で空腹・水分を回復">食事</button>
-        <button onclick="train()" title="体力・トレーニング上昇">トレーニング</button>
-        <button onclick="openRepairModal()" title="損傷個所を修理">修理</button>
+      <button onclick="openMeal(); playSound();" title="食事で空腹・水分を回復">食事</button>
+      <button onclick="train(); playSound();" title="体力・トレーニング上昇">トレーニング</button>
+      <button onclick="openRepairModal(); playSound();" title="損傷個所を修理">修理</button>
     </div>
- <!-- 修理モーダル -->
-<!-- 修理モーダル -->
-<div id="repair-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>修理メニュー</h2>
-    <ul id="repair-options">
-      <li onclick="promptRepair('hullDamaged')">
-        <img src="image/repairKit.png" alt="船体修理" class="bag-icon">
-        <div>船体</div>
-      </li>
-      <li onclick="promptRepair('comms')">
-        <img src="image/repairKit.png" alt="通信機修理" class="bag-icon">
-        <div>通信機</div>
-      </li>
-            <li onclick="promptRepair('waterGen')">
-        <img src="image/repairKit.png" alt="水生成装置修理" class="bag-icon">
-        <div>水生成装置</div>
-      </li>
-      <li onclick="promptRepair('fuel')">
-        <img src="image/fuelcan.png" alt="燃料タンク修理" class="bag-icon">
-        <div> 燃料タンク</div>
-      </li>
-      <li onclick="promptRepair('oxygen')">
-        <img src="image/oxygenCylinder.png" alt="酸素装置修理" class="bag-icon">
-        <div>酸素生成装置</div>
-      </li>
-    </ul>
-    <button onclick="closeRepairModal()">閉じる</button>
-  </div>
-</div>
-
-<!-- 修理確認ダイアログ -->
-<div id="repair-confirm" class="modal hidden">
-  <div class="modal-content">
-    <p id="repair-message">この部分を修理しますか？</p>
-    <button onclick="confirmRepair(true)">使用する</button>
-    <button onclick="confirmRepair(false)">キャンセル</button>
-  </div>
-</div>
-
-
-<script>
-
-
-  let selectedRepairPart = null;
-
-  // 修理メッセージをカスタマイズ
-  function getRepairMessage(part) {
-    switch (part) {
-      case "fuel": return "燃料缶を使いますか？";
-      case "oxygen": return "酸素ボンベを使いますか？";
-      default: return "修理キットを使いますか？";
-    }
-  }
-
-  function getRepairLabel(part) {
-    const labels = {
-      hullDamaged: "☄️ 船体",
-      comms: "📡 通信機",
-      oxygen: "🔧 酸素供給装置",
-      waterGen: "🚱 水生成装置",
-      fuel: "⛽️ 燃料タンク"
-    };
-    return labels[part] || part;
-  }
-
-  function promptRepair(part) {
-    selectedRepairPart = part;
-    document.getElementById("repair-message").textContent = getRepairLabel(part) + " - " + getRepairMessage(part);
-    document.getElementById("repair-confirm").classList.remove("hidden");
-  }
-
-  function confirmRepair(doRepair) {
-    document.getElementById("repair-confirm").classList.add("hidden");
-    if (!doRepair || !selectedRepairPart) return;
-
-    const cargo = JSON.parse(localStorage.getItem('cargo')) || [];
-
-    let toolName = "修理キット";
-    if (selectedRepairPart === "fuel") toolName = "燃料缶";
-    if (selectedRepairPart === "oxygen") toolName = "酸素ボンベ";
-
-    const tool = cargo.find(i => i.name === toolName);
-
-    if (!tool || tool.quantity <= 0) {
-      alert(`${toolName} がありません！`);
-      return;
-    }
-
-    if (!malfunctions[selectedRepairPart]) {
-      alert("この部分は故障していません！");
-      return;
-    }
-
-    tool.quantity--;
-    localStorage.setItem('cargo', JSON.stringify(cargo));
-    malfunctions[selectedRepairPart] = false;
-    malfunctionsDay[selectedRepairPart] = false;
-    addEvent(getRepairLabel(selectedRepairPart) + " を修理しました。");
-    updateDisplay();
-  }
-</script>
-
-
-
-    <div style="text-align:center" class="summary">
-        <button onclick="nextDay()" style="text-align:center">次の日へ</button>
+    <div id="repair-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>修理メニュー</h2>
+        <ul id="repair-options">
+          <li onclick="promptRepair('hullDamaged'); playSound();">
+            <img src="image/repairKit.png" alt="船体修理" class="bag-icon">
+            <div>船体</div>
+          </li>
+          <li onclick="promptRepair('comms'); playSound();">
+            <img src="image/repairKit.png" alt="通信機修理" class="bag-icon">
+            <div>通信機</div>
+          </li>
+          <li onclick="promptRepair('waterGen'); playSound();">
+            <img src="image/repairKit.png" alt="水生成装置修理" class="bag-icon">
+            <div>水生成装置</div>
+          </li>
+          <li onclick="promptRepair('fuel'); playSound();">
+            <img src="image/fuelcan.png" alt="燃料タンク修理" class="bag-icon">
+            <div> 燃料タンク</div>
+          </li>
+          <li onclick="promptRepair('oxygen'); playSound();">
+            <img src="image/oxygenCylinder.png" alt="酸素装置修理" class="bag-icon">
+            <div>酸素生成装置</div>
+          </li>
+        </ul>
+        <button onclick="closeRepairModal()">閉じる</button>
+      </div>
     </div>
-    
-    <!--イベントログ-->
-<section id="event-log" class="event-log collapsed" onclick="toggleLog()">
-    <h2>🛸 イベントログ
-       <button id="toggle-log" title="クリックしてログを展開／折りたたみ">▼</button>
-<!--イベントログ展開縮小のボタン-->
-    </h2>
-    <ul id="event-messages">
+
+    <div id="repair-confirm" class="modal hidden">
+      <div class="modal-content">
+        <p id="repair-message">この部分を修理しますか？</p>
+        <button onclick="confirmRepair(true); playRepairSound();">使用する</button> <button onclick="confirmRepair(false)">キャンセル</button>
+      </div>
+    </div>
+
+    <section id="event-log" class="event-log collapsed" onclick="toggleLog()">
+      <h2>🛸 イベントログ
+        <button id="toggle-log" title="クリックしてログを展開／折りたたみ">▼</button>
+        </h2>
+      <ul id="event-messages">
         <li>【1日目】宇宙船は順調に航行中です。</li>
-    </ul>
-</section>
+      </ul>
+    </section>
+    <section id="spacey-log" class="event-log">
+      <h3>🚀 SpaceYログ</h3>
+      <ul id="spacey-messages">
+        <li>【1日目】SpaceY:火星到達まで 10%</li>
+        <li>SpaceY社の進捗がここに表示されます。</li>
+      </ul>
+    </section>
 
 
-<!-- 所持品モーダル（chooseitem を再利用） -->
-<div id="bag-modal" class="modal hidden">
-  <div class="modal-overlay"></div>
-  <div class="modal-content">
-    <h2>🎒 所持品一覧</h2>
-    <p>積載上限: <strong id="weight-limit">100</strong> kg</p>
-    <p>現在の合計重量: <strong id="current-weight">0</strong> kg</p>
-    <div id="item-list"></div>
-    <button onclick="closeBag()">閉じる</button>
-  </div>
-</div>
+    <div id="bag-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <h2>🎒 所持品一覧</h2>
+        <p>積載上限: <strong id="weight-limit">100</strong> kg</p>
+        <p>現在の合計重量: <strong id="current-weight">0</strong> kg</p>
+        <div id="item-list"></div>
+        <button onclick="closeBag()">閉じる</button>
+      </div>
+    </div>
 
-<!--  食事モーダル -->
-<div id="meal-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>残り食料</h2>
-    <ul id="meal-list">
-        <li>
-            <img src="image/food.png" alt="加水食品" class="bag-icon" onclick="eat(1)">
+    <div id="meal-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>残り食料</h2>
+        <ul id="meal-list">
+          <li onclick="eat(1); playRecoverySound();">
+            <img src="image/food.png" alt="加水食品" class="bag-icon">
             <div>加水食品</div>
             <div id="amount-food">残り: 0個</div>
-        </li>
-        <li>
-            <img src="image/can.jpg" alt="缶詰" class="bag-icon" onclick="eat(2)">
+          </li>
+          <li onclick="eat(2); playRecoverySound();">
+            <img src="image/can.jpg" alt="缶詰" class="bag-icon">
             <div>缶詰</div>
             <div id="amount-can">残り: 0個</div>
-        </li>
-        <li>
-            <img src="image/food2.png" alt="半乾燥食品" class="bag-icon" onclick="eat(3)">
+          </li>
+          <li onclick="eat(3); playRecoverySound();">
+            <img src="image/food2.png" alt="半乾燥食品" class="bag-icon">
             <div>半乾燥食品</div>
             <div id="amount-dry">残り: 0個</div>
-        </li>
-        <li>
-            <img src="image/water.png" alt="水" class="bag-icon" onclick="eat(4)">
+          </li>
+          <li onclick="eat(4); playRecoverySound();">
+            <img src="image/water.png" alt="水" class="bag-icon">
             <div>水</div>
             <div id="amount-water">残り: 0個</div>
-        </li>
-    </ul>
+          </li>
+        </ul>
 
 
-    <button onclick="closeMeal()">閉じる</button>
-  </div>
-</div>
+        <button onclick="closeMeal()">閉じる</button>
+      </div>
+    </div>
 
 
     <script src="flying.js"></script>
