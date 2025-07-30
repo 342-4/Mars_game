@@ -4,16 +4,16 @@ const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;
 document.getElementById("weight-limit").textContent = weightLimit;
 //最大積載量をリセットするときに使う
-localStorage.removeItem("deathCount");
+//localStorage.removeItem("deathCount");
 
 //アイテムの定義
 const items = [
-    { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png"},
-    { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
-    { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food2.png" },
-    { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
-    { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png"},
-    { name: '燃料缶', weight: 20, quantity: 0, image:"image/fuelcan.png" },
+    { name: '加水食品', weight: 2, quantity: 0, image: "image/food.png"},
+    { name: '缶詰', weight: 5, quantity: 0, image: "image/can.jpg" },
+    { name: '半乾燥食品', weight: 3, quantity: 0, image: "image/food2.png" },
+    { name: '酸素ボンベ', weight: 10, quantity: 0, image: "image/oxygenCylinder.png" },
+    { name: '修理キット', weight: 5, quantity: 0, image: "image/repairKit.png"},
+    { name: '燃料缶', weight: 10, quantity: 0, image:"image/fuelcan.png" },
     { name: '水', weight: 1, quantity: 0, image: "image/water.png"},
 ];
 const itemDescriptions = {

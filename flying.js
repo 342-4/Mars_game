@@ -390,10 +390,10 @@ function triggerRandomEvent(abnormalStatus, day) {
         }
         eventOccurred = true; // An event occurred
     } else {
-        if (bg) {
+        if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.05) {
+        if (rand < 0.5) {
             // 隕石衝突（5%）
             addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
@@ -404,9 +404,9 @@ function triggerRandomEvent(abnormalStatus, day) {
                 bg.style.backgroundImage = "url(image/spaceShip_meteo.png)"
             }
             eventOccurred = true;
-        } else if (rand < 0.8) {
-            // 機器の故障（15%）
-            const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
+        } else if (rand < 0.5) {
+            // 機器の故障
+            const type = getRandomInt(1, 4); // 1から4に変更 // 
             if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
@@ -554,12 +554,12 @@ function toggleLogSize() {
 }
 
 const items = [
-    { name: '加水食品', weight: 5, quantity: 0, image: "image/food.png" },
-    { name: '缶詰', weight: 10, quantity: 0, image: "image/can.jpg" },
-    { name: '半乾燥食品', weight: 5, quantity: 0, image: "image/food.png" },
-    { name: '酸素ボンベ', weight: 20, quantity: 0, image: "image/oxygenCylinder.png" },
-    { name: '修理キット', weight: 8, quantity: 0, image: "image/repairKit.png" },
-    { name: '燃料缶', weight: 20, quantity: 0, image: "image/fuelcan.png" },
+    { name: '加水食品', weight: 2, quantity: 0, image: "image/food.png" },
+    { name: '缶詰', weight: 5, quantity: 0, image: "image/can.jpg" },
+    { name: '半乾燥食品', weight: 3, quantity: 0, image: "image/food.png" },
+    { name: '酸素ボンベ', weight: 10, quantity: 0, image: "image/oxygenCylinder.png" },
+    { name: '修理キット', weight: 5, quantity: 0, image: "image/repairKit.png" },
+    { name: '燃料缶', weight: 10, quantity: 0, image: "image/fuelcan.png" },
     { name: '水', weight: 1, quantity: 0, image: "image/water.png" }
 ];
 // chooseItem.js から cargo データを取得
