@@ -466,7 +466,7 @@ function triggerRandomEvent(abnormalStatus, day) {
         if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.08 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
+        if (rand < 0.05 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
             // 隕石衝突（5%）
             health -= 15;
             thirst -= 10;
@@ -542,7 +542,7 @@ function triggerRandomEvent(abnormalStatus, day) {
             }
             eventOccurred = true;
             flag = true;
-        } else if (rand < 0.8) {
+        } else if (rand < 0.5) {
             // 機器の故障（15%）
             const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
             if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
