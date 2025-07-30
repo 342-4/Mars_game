@@ -10,8 +10,11 @@
 
 <body class="background">
   <audio id="bgm" src="image/bgm.mp3" autoplay loop></audio>
-
-  <div class="day-display">
+  <audio id="soundEffect" src="image/31.mp3"></audio>
+  <audio id="recoverySound" src="image/kaifuku.mp3"></audio>
+  <audio id="nextDaySound" src="image/23.mp3"></audio>
+  <audio id="runSound" src="image/run.mp3" loop></audio>
+  <audio id="repairSound" src="image/repair.mp3"></audio> <div class="day-display">
     <h2>日数: <span id="day">1</span> 日目</h2>
   </div>
   <div class="buttons" style="margin: 10px 0;">
@@ -64,7 +67,6 @@
 
 
 
-    <!-- 酸素＆ガソリンバーの説明 -->
     <div class="bottom-right-status">
       <div class="status-block" title="酸素：呼吸に必要。減ると行動が制限されます。">
         酸素: <span id="oxygen"></span>
@@ -85,32 +87,31 @@
 
 
     <div class="buttons lower-buttons">
-      <button onclick="openMeal()" title="食事で空腹・水分を回復">食事</button>
-      <button onclick="train()" title="体力・トレーニング上昇">トレーニング</button>
-      <button onclick="openRepairModal()" title="損傷個所を修理">修理</button>
+      <button onclick="openMeal(); playSound();" title="食事で空腹・水分を回復">食事</button>
+      <button onclick="train(); playSound();" title="体力・トレーニング上昇">トレーニング</button>
+      <button onclick="openRepairModal(); playSound();" title="損傷個所を修理">修理</button>
     </div>
-    <!-- 修理モーダル -->
     <div id="repair-modal" class="modal hidden">
       <div class="modal-content">
         <h2>修理メニュー</h2>
         <ul id="repair-options">
-          <li onclick="promptRepair('hullDamaged')">
+          <li onclick="promptRepair('hullDamaged'); playSound();">
             <img src="image/repairKit.png" alt="船体修理" class="bag-icon">
             <div>船体</div>
           </li>
-          <li onclick="promptRepair('comms')">
+          <li onclick="promptRepair('comms'); playSound();">
             <img src="image/repairKit.png" alt="通信機修理" class="bag-icon">
             <div>通信機</div>
           </li>
-          <li onclick="promptRepair('waterGen')">
+          <li onclick="promptRepair('waterGen'); playSound();">
             <img src="image/repairKit.png" alt="水生成装置修理" class="bag-icon">
             <div>水生成装置</div>
           </li>
-          <li onclick="promptRepair('fuel')">
+          <li onclick="promptRepair('fuel'); playSound();">
             <img src="image/fuelcan.png" alt="燃料タンク修理" class="bag-icon">
             <div> 燃料タンク</div>
           </li>
-          <li onclick="promptRepair('oxygen')">
+          <li onclick="promptRepair('oxygen'); playSound();">
             <img src="image/oxygenCylinder.png" alt="酸素装置修理" class="bag-icon">
             <div>酸素生成装置</div>
           </li>
@@ -119,26 +120,21 @@
       </div>
     </div>
 
-    <!-- 修理確認ダイアログ -->
     <div id="repair-confirm" class="modal hidden">
       <div class="modal-content">
         <p id="repair-message">この部分を修理しますか？</p>
-        <button onclick="confirmRepair(true)">使用する</button>
-        <button onclick="confirmRepair(false)">キャンセル</button>
+        <button onclick="confirmRepair(true); playRepairSound();">使用する</button> <button onclick="confirmRepair(false)">キャンセル</button>
       </div>
     </div>
 
-    <!--イベントログ-->
     <section id="event-log" class="event-log collapsed" onclick="toggleLog()">
       <h2>🛸 イベントログ
         <button id="toggle-log" title="クリックしてログを展開／折りたたみ">▼</button>
-        <!--イベントログ展開縮小のボタン-->
-      </h2>
+        </h2>
       <ul id="event-messages">
         <li>【1日目】宇宙船は順調に航行中です。</li>
       </ul>
     </section>
-    <!-- SpaceYログ -->
     <section id="spacey-log" class="event-log">
       <h3>🚀 SpaceYログ</h3>
       <ul id="spacey-messages">
@@ -148,7 +144,6 @@
     </section>
 
 
-    <!-- 所持品モーダル（chooseitem を再利用） -->
     <div id="bag-modal" class="modal hidden">
       <div class="modal-overlay"></div>
       <div class="modal-content">
@@ -160,28 +155,27 @@
       </div>
     </div>
 
-    <!--  食事モーダル -->
     <div id="meal-modal" class="modal hidden">
       <div class="modal-content">
         <h2>残り食料</h2>
         <ul id="meal-list">
-          <li>
-            <img src="image/food.png" alt="加水食品" class="bag-icon" onclick="eat(1)">
+          <li onclick="eat(1); playRecoverySound();">
+            <img src="image/food.png" alt="加水食品" class="bag-icon">
             <div>加水食品</div>
             <div id="amount-food">残り: 0個</div>
           </li>
-          <li>
-            <img src="image/can.jpg" alt="缶詰" class="bag-icon" onclick="eat(2)">
+          <li onclick="eat(2); playRecoverySound();">
+            <img src="image/can.jpg" alt="缶詰" class="bag-icon">
             <div>缶詰</div>
             <div id="amount-can">残り: 0個</div>
           </li>
-          <li>
-            <img src="image/food2.png" alt="半乾燥食品" class="bag-icon" onclick="eat(3)">
+          <li onclick="eat(3); playRecoverySound();">
+            <img src="image/food2.png" alt="半乾燥食品" class="bag-icon">
             <div>半乾燥食品</div>
             <div id="amount-dry">残り: 0個</div>
           </li>
-          <li>
-            <img src="image/water.png" alt="水" class="bag-icon" onclick="eat(4)">
+          <li onclick="eat(4); playRecoverySound();">
+            <img src="image/water.png" alt="水" class="bag-icon">
             <div>水</div>
             <div id="amount-water">残り: 0個</div>
           </li>
