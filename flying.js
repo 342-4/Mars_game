@@ -393,7 +393,7 @@ function triggerRandomEvent(abnormalStatus, day) {
         if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.5) {
+        if (rand < 0.05) {
             // 隕石衝突（5%）
             addEvent("☄️ 隕石が船体に衝突！酸素漏れと物資の一部喪失。修理が必要です！");
             health -= 15;
