@@ -466,7 +466,7 @@ function triggerRandomEvent(abnormalStatus, day) {
         if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.05 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
+        if (rand < 0.50 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
             // 隕石衝突（5%）
             health -= 15;
             thirst -= 10;
