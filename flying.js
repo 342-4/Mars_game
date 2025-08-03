@@ -466,7 +466,7 @@ function triggerRandomEvent(abnormalStatus, day) {
         if (bg && !malfunctions.hullDamaged) {
             bg.style.backgroundImage = "url('image/spaceShip.png')";
         }
-        if (rand < 0.50 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
+        if (rand < 0.05 && !(malfunctions.hullDamaged && malfunctionsDay.hullDamaged)) {
             // 隕石衝突（5%）
             health -= 15;
             thirst -= 10;
@@ -841,3 +841,28 @@ window.addEventListener('DOMContentLoaded', () => {
 //初期表示更新
 updateDisplay();
 updateResourceBars();
+// 既存のJavaScriptコードの末尾に以下を追加
+
+// --- ショートカットキーの実装 ---
+document.addEventListener('keydown', function(event) {
+  // '0'キーが押された場合
+  if (event.key === '0') {
+    // デバッグ用のメッセージをコンソールに表示
+    console.log("ショートカットキー '0' が押されました。25日目にジャンプします。");
+
+    // 「次の日へ」ボタンを押した時と同じ音を再生
+    playNextDaySound();
+
+    // 日付を直接25日に設定
+    day = 25;
+
+    // 画面表示を更新
+    updateDisplay();
+    
+    // イベントログにジャンプしたことを記録
+    addEvent(`🚀 ショートカットキーで ${day}日目へジャンプしました。`);
+
+    // ゲームオーバー判定（25日目がクリア日を過ぎていないかチェック）
+    checkGameOver(); 
+  }
+});
