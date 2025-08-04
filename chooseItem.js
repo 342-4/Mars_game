@@ -3,7 +3,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;
 document.getElementById("weight-limit").textContent = weightLimit;
-//最大積載量をリセットするときに使う
+//最大積載量をリセットするときに使う（このコードがあったら110kgから120kg,130kg）
 //localStorage.removeItem("deathCount");
 
 
