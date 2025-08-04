@@ -6,10 +6,13 @@ document.getElementById("weight-limit").textContent = weightLimit;
 //最大積載量をリセットするときに使う（このコードがあったら110kgから120kg,130kg）
 //localStorage.removeItem("deathCount");
 
+
 // --- 効果音の読み込み ---
 const selectSound = new Audio('image/select.mp3'); // ① 効果音ファイルを読み込む
 const shuppatsuSound = new Audio('image/出発.mp3'); // ① 出発.mp3 ファイルを読み込む
 const rocketSound = new Audio('image/ロケット.mp3');
+
+// 必要であれば音量調整
 //アイテムの定義
 const items = [
     { name: '加水食品', weight: 2, quantity: 0, image: "image/food.png"},
@@ -20,7 +23,10 @@ const items = [
     { name: '燃料缶', weight: 10, quantity: 0, image:"image/fuelcan.png" },
     { name: '水', weight: 1, quantity: 0, image: "image/water.png"},
 ]
-//アイテムの定義
+
+
+
+
 const itemDescriptions = {
     '加水食品': '加水してすぐ食べられる便利な食品。ご飯類や麺類空腹が10回復する',
     '缶詰': '長期保存が可能な栄養食品。空腹が20回復する',
