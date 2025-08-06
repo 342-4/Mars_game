@@ -3,7 +3,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 let currentWeight = 0;
 document.getElementById("weight-limit").textContent = weightLimit;
-//最大積載量をリセットするときに使う（このコードがあったら110kgから120kg,130kg）
+//最大積載量をリセットするときに使う（このコードがあったら110kgから120kg,130kgと増えない）
 //localStorage.removeItem("deathCount");
 
 
@@ -99,7 +99,7 @@ function startMission() {
     // alertが閉じられた直後にロケット効果音を再生するために、alertの後に配置
     alert("出発準備完了！\n選んだ物資:\n" + summary + `\n合計重量: ${currentWeight}kg`);
 
-    // ★変更: alertが閉じられた直後にロケット効果音を再生するように移動
+    //  alertが閉じられた直後にロケット効果音を再生するように移動
     rocketSound.currentTime = 0;
     rocketSound.play().catch(e => console.error("ロケット効果音再生エラー:", e));
 

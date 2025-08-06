@@ -22,7 +22,7 @@ const soundEffect = document.getElementById("soundEffect"); // 効果音のaudio
 const recoverySound = document.getElementById("recoverySound"); // 回復音のaudio要素を取得
 const nextDaySound = document.getElementById("nextDaySound"); // 23.mp3用のaudio要素を取得
 const runSound = document.getElementById("runSound"); // run.mp3用のaudio要素を取得
-const repairSound = document.getElementById("repairSound"); // ★追加：repair.mp3用のaudio要素を取得
+const repairSound = document.getElementById("repairSound"); // repair.mp3用のaudio要素を取得
 
 // 現在の燃料と酸素も100スタート（変化させる場合は変数で管理）
 let currentFuel = 100;
@@ -58,7 +58,7 @@ const deathCount = parseInt(localStorage.getItem("deathCount") || "0");
 const weightLimit = baseWeightLimit + deathCount * 10;
 
 let currentWeight = 0;//所持している合計重量保持
-const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア // 修正点: 目標日数を15〜19日に変更
+const goalDay = getRandomInt(28, 32); // 28〜32日目のどこかでクリア // 
 localStorage.setItem("goalDay", goalDay);
 
 // 効果音を再生する関数
@@ -101,7 +101,7 @@ function stopRunSound() {
     }
 }
 
-// ★追加：修理音を再生する関数
+// 修理音を再生する関数
 function playRepairSound() {
     if (repairSound) {
         repairSound.currentTime = 0; // 再生位置を先頭に戻す
@@ -179,13 +179,9 @@ function updateHealthHighlight() {
 }
 
 //次の日に進める処理
-// nextDay() 関数の修正（既存のコードに合わせて調整）
 function nextDay() {
     const nextDayButton = document.querySelector('.summary button'); // 「次の日へ」ボタン要素を取得
 
-    // 1. ボタンを無効化する
-    // nextDayButton.disabled = true;
-    // nextDayButton.textContent = '進行中...'; 
 
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
@@ -208,17 +204,14 @@ function nextDay() {
     playRunSound();
 
 
-    // アニメーションが終了するまでの時間を考慮し、画面暗転を遅延させる (CSSアニメーション: 3s)
+    // アニメーションが終了するまでの時間を考慮し、画面暗転を遅延させる 
     setTimeout(() => {
-        fade.classList.add("active"); // 暗転開始 (CSSトランジション: 1s)
+        fade.classList.add("active"); // 暗転開始 
         stopRunSound(); // 画面暗転と同時にrunSoundを停止
 
         // 画面暗転アニメーションが終了するまでの時間を考慮し、日次処理とページ遷移をさらに遅延させる
         setTimeout(() => {
-            day++; // 日付を進める (day は既にグローバル変数で定義されています)
-
-            // ここに、nextDay() 内の元々の日次処理をすべて移動します
-            // --- 元の nextDay() 関数内の日次処理ここから ---
+            day++; // 日付を進める 
 
             // SpaceYの進捗ログ
             // `day` が SpaceY到達日数以下かつ、3日ごとにログを出すロジック
@@ -320,8 +313,6 @@ function nextDay() {
             updateDisplay(); // 画面表示更新
             updateResourceBars();
 
-            // --- 元の nextDay() 関数内の日次処理ここまで ---
-
             // 画面を明るく戻す
             fade.classList.remove("active");
 
@@ -341,7 +332,7 @@ function nextDay() {
 
             // 2. ボタンを再度有効化する
             nextDayButton.disabled = false;
-            nextDayButton.textContent = '次の日へ'; // ボタンのテキストを元に戻す
+            nextDayButton.textContent = '次の日へ'; 
 
             // ゲームオーバー/クリア判定
             checkGameOver(); // アニメーションと処理が終わった後に判定
@@ -350,7 +341,7 @@ function nextDay() {
     }, 3000); // 宇宙飛行士のアニメーション時間 (3秒)
 }
 
-// グローバルスコープに移動した修理関連の関数 // 変更点: ここから修理関連関数
+// グローバルスコープに移動した修理関連の関数 // 
 let selectedRepairPart = null;
 
 function getRepairMessage(part) {
@@ -419,7 +410,7 @@ function repairSystem(part) {
     malfunctions[part] = false;
     malfunctionsDay[part] = false;
 
-    // 修理時に酸素・燃料を全回復 // 変更点: ここで酸素・燃料を全回復
+    // 修理時に酸素・燃料を全回復 // 
     if (part === "oxygen") {
         currentOxygen = 100;
     }
@@ -448,8 +439,8 @@ function repairSystem(part) {
 
     addEvent(`(${day}日目)` + message);
     updateDisplay();
-    updateResourceBars(); // 変更点: リソースバーの更新を呼び出し
-} // 変更点: ここまで修理関連関数
+    updateResourceBars(); 
+} 
 
 //ランダムイベント発生関数
 function triggerRandomEvent(abnormalStatus, day) {
@@ -529,7 +520,6 @@ function triggerRandomEvent(abnormalStatus, day) {
             if (bagModal && !bagModal.classList.contains('hidden')) {
                 renderItems(); // chooseItem.jsの関数を呼び出し、所持品リストを更新
             }
-            // 修正: 所持品モーダルの内容をすぐに更新するために、renderItems()を無条件に呼び出す
             renderItems(); // この行を追加して、所持品モーダルの内容をすぐに更新します
 
             const savedCargo = JSON.parse(localStorage.getItem("cargo") || "[]");
@@ -551,7 +541,7 @@ function triggerRandomEvent(abnormalStatus, day) {
             flag = true;
         } else if (rand < 0.5) {
             // 機器の故障（15%）
-            const type = getRandomInt(1, 4); // 1から4に変更 // 修正点: getRandomIntの範囲を1〜4に変更
+            const type = getRandomInt(1, 4); // 1から4 // 
             if (type === 1 && !(malfunctions.comms && malfunctionsDay.comms)) {
                 addEvent("📡 通信機器が故障！交信不能でストレス上昇。");
                 stress += 15;
@@ -795,7 +785,7 @@ function closeBag() {
 // 食事モーダル表示
 function openMeal() {
     document.getElementById("meal-modal").classList.remove("hidden");
-    updateMealQuantities();    // ← これを必ず呼ぶ
+    updateMealQuantities();   
 }
 
 // 食事モーダル非表示
@@ -850,7 +840,7 @@ updateDisplay();
 updateResourceBars();
 // 既存のJavaScriptコードの末尾に以下を追加
 
-// --- ショートカットキーの実装 ---
+// ショートカットキー
 document.addEventListener('keydown', function(event) {
   // '0'キーが押された場合
   if (event.key === '0') {
