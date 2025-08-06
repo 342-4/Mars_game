@@ -190,6 +190,12 @@ function nextDay() {
     const astronaut = document.getElementById("astronaut");
     const fade = document.getElementById("screen-fade");
 
+    // 宇宙酔いは1日限り
+    if (malfunctions.Drunkenness) {
+        malfunctions.Drunkenness = false;
+    }
+
+
     // まずnextDaySoundを再生
     playNextDaySound();
 
@@ -256,6 +262,7 @@ function nextDay() {
             hunger = Math.max(0, hunger);
             thirst = Math.max(0, thirst);
             training = Math.max(0, training);
+            stress = Math.max(0, stress);
 
             if (hunger === 0 || thirst === 0 || training === 0) {
                 health -= 10;
@@ -296,10 +303,10 @@ function nextDay() {
                 flag = true; // 水生成装置の故障が続いている場合はフラグを立てる
             }
             if (malfunctions.fuel && malfunctionsDay.fuel) {
-                stress += 10;
                 addEvent("⛽️ 燃料タンクの故障が続いています。");
                 flag = true; // 燃料タンクの故障が続いている場合はフラグを立てる
             }
+            
             triggerRandomEvent(abnormalStatus, day); // イベント発生
 
             if (!(malfunctions.comms || malfunctionsDay.comms)) {
