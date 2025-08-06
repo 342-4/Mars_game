@@ -61,12 +61,8 @@ body {
 
 .summary {
     margin-top: -120px;
-    /* 例: ボタンを上に50px移動させる場合 */
 }
 
-/* chooseItem.css */
-
-/* ... 既存のCSSコード ... */
 
 .summary button {
     /* .summary クラス内の button 要素にスタイルを適用 */
@@ -74,7 +70,6 @@ body {
     /* フォントサイズを大きくする */
     padding: 20px 20px;
     /* パディングを増やしてボタン全体のサイズを大きくする */
-    /* 必要に応じて、min-width や min-height などで最小サイズを設定することも可能です */
     border: none;
     /* デフォルトの枠線を削除 */
     border-radius: 8px;

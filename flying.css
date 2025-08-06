@@ -294,10 +294,10 @@ body {
 #spacey-log {
   position: fixed;
   top: 270px;
-  /* 変更: イベントログの下に配置するための位置調整 */
+  /* イベントログの下に配置するための位置調整 */
   right: 10px;
   width: 250px;
-  /* 変更: イベントログと同じ幅に調整 */
+  /* イベントログと同じ幅に調整 */
   max-height: 200px;
   background-color: rgba(0, 0, 0, 0.7);
   border: 1px solid #00ffff;
@@ -385,7 +385,6 @@ body {
 .summary {
   margin-top: 30px;
   clear: both;
-  /* 追加 */
   text-align: center;
 }
 
@@ -417,7 +416,6 @@ body {
 /* 元の固定位置を無効化 */
 #bag-button {
   position: static;
-  /* ← fixedから変更 */
   background: none;
   border: none;
   cursor: pointer;
@@ -581,8 +579,6 @@ body {
 
 /* flying.css */
 
-/* ... 既存のCSSコード ... */
-
 /* 「次の日へ」ボタンのスタイル */
 .next-day-button {
   font-size: 32px;
@@ -597,7 +593,6 @@ body {
   transition: background-color 0.3s ease, transform 0.1s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin-top: -45px;
-  /* 必要に応じて調整してください */
 }
 
 .next-day-button:hover {

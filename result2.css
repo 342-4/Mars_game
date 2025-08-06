@@ -13,9 +13,8 @@ body {
     font-family: "Segoe UI", sans-serif;
     background-color: #1e1e2f;
     color: orange;
-    /* ここをオレンジに変更しました */
+    /* ここはオレンジ*/
     text-align: center;
-    /* paddingは後述のFlexboxとposition: absolute;で調整するため削除または小さくします */
     margin: 0;
     /* bodyのデフォルトマージンを削除 */
     min-height: 100vh;
@@ -28,13 +27,11 @@ body {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: orange;
-    /* ここをオレンジに変更しました */
 }
 
 #day-result,
 #status-result {
     color: orange;
-    /* ここをオレンジに変更しました */
 }
 
 .content-wrapper {
